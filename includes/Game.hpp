@@ -4,6 +4,7 @@
 #include <string>
 #include <exception>
 
+
 #define DET_PLAYER(x) \
     ((x) == P1_SMALL || (x) == P1_MEDIUM || (x) == P1_BIG ? 1 : \
     ((x) == P2_SMALL || (x) == P2_MEDIUM || (x) == P2_BIG ? 2 : 0))
@@ -19,11 +20,12 @@ enum moov
     P2_BIG
 };
 
+class Case;
 
 class Game
 {
     private:
-        int map[3][3];
+        Case map[3][3];
 
     public:
         Game();
@@ -35,3 +37,5 @@ class Game
         void execute_moov(int i, int j, int player);
         bool is_allowed_moov(int i, int j, int player);
 };
+
+#include "./Case.hpp"

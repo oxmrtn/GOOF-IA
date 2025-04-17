@@ -7,7 +7,7 @@ Game::Game()
     {
         for (int j = 0; j < 3; j++)
         {
-            map[i][j] = 0;
+            map[i][j] = Case();
         }
     }
 }
@@ -21,7 +21,7 @@ void Game::display_game()
         for (int j = 0; j < 3; j++)
         {
             std::cout << " | ";
-            std::cout << map[i][j];
+            std::cout << map[i][j].getCurrent();
         }
         std::cout << " | ";
         std::cout << std::endl;
@@ -71,18 +71,18 @@ bool Game::checker()
 {
     for (int j = 0; j < 3; j++)
     {
-        if (check_line(map[0][j], map[1][j], map[2][j]))
+        if (check_line(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent()))
             return (true);
     }
     for (int i = 0; i < 3; i++)
     {
-        if (check_line(map[i][0], map[i][1], map[i][2]))
+        if (check_line(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent()))
             return (true);
     }
-    if (check_line(map[0][0], map[1][1], map[2][2]))
+    if (check_line(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent()))
         return (true);
 
-    if (check_line(map[0][2], map[1][1], map[2][0]))
+    if (check_line(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent()))
         return (true);
     return (false);
 }

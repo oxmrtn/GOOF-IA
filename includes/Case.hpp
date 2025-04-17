@@ -2,7 +2,8 @@
 
 #include <iostream>
 #include <string>
-#include "./Game.hpp"
+#include "./enum.hpp"
+
 
 class Case
 {

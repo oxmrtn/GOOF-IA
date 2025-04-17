@@ -37,8 +37,25 @@ Game::~Game()
 
 void Game::launch_game()
 {
+    int i = 1;
     std::cout << " The game has began !" << std::endl;
-    this->display_game();
+    while (!this->checker())
+    {
+        if (i == 1)
+        {
+            std::string temp;
+            std::cout << "PLAYER 1 MOOV" << std::endl << std::endl;
+            execute_moov(0,0, P1_SMALL);
+        }
+        else
+        {
+            std::cout << "PLAYER 2 MOOV" << std::endl << std::endl;
+            execute_moov(0,0, P2_MEDIUM);
+        }
+        i = -i;
+        this->display_game();
+        
+    }
 }
 
 bool Game::check_line(int a, int b, int c)
@@ -85,4 +102,15 @@ bool Game::checker()
     if (check_line(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent()))
         return (true);
     return (false);
+}
+
+bool Game::execute_moov(int i, int j, int value)
+{
+    if (!this->map[i][j].is_allowed( value ))
+        return (false);
+    else
+    {
+        this->map[i][j].setCase( value );
+        return (true);
+    }
 }

@@ -12,12 +12,12 @@ Case::Case()
 Case::~Case()
 {}
 
-int Case::getCurrent()
+int Case::getCurrent() // Return the current states of the case
 {
     return (tab[latest]);
 }
 
-void Case::setCase(int value)
+void Case::setCase(int value) // Set a new value for the case.
 {
     if (latest >= 3)
         return ;
@@ -25,7 +25,7 @@ void Case::setCase(int value)
     this->tab[latest] = value;
 }
 
-void Case::undo_move()
+void Case::undo_move() // Withdraw a value from a case
 {
     if (latest <= 0)
         return ;
@@ -33,12 +33,12 @@ void Case::undo_move()
     this->latest--;
 }
 
-bool Case::space_on_case()
+bool Case::space_on_case() // True if the case is empty
 {
     return (this->latest >= 3 ? false : true);
 }
 
-bool Case::is_allowed( int value )
+bool Case::is_allowed( int value ) // True if a moov is allowed, false otherwise
 {
     if (!space_on_case())
         return (false);

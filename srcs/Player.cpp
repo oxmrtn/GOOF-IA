@@ -6,7 +6,7 @@ Player::Player() : moov{1, 1, 2, 2, 3, 3}
 Player::~Player()
 {}
 
-void Player::display_moov()
+void Player::display_moov() // Display all the available moov
 {
     for (int i = 0; i < 6; i++)
     {
@@ -18,7 +18,7 @@ void Player::display_moov()
     return ;
 }
 
-bool Player::allowed_moov(int play)
+bool Player::allowed_moov(int play) // Check if a player has the right to play a moov
 {
     if (play < 0 || play > 3)
         return (false);
@@ -30,7 +30,7 @@ bool Player::allowed_moov(int play)
     return (false);
 }
 
-void Player::play(int play)
+void Player::play(int play) // Withdraw a piece from the available piece
 {
     for (int i = 0; i < 6; i++)
     {

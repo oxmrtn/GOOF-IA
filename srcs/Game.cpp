@@ -14,7 +14,7 @@ Game::Game()
     player[1] = Player(); 
 }
 
-void Game::display_game()
+void Game::display_game() // Human readable display of the board
 {
     std::cout << std::endl;
     std::cout << YELLOW << "    0   1   2 " << DEFAULT << std::endl;
@@ -48,7 +48,7 @@ Game::~Game()
     std::cout << "Game destructor called" << std::endl;
 }
 
-void Game::turn(int idx)
+void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 turn and idx = 1 for player 2 turn.
 {
     int n;
 
@@ -210,7 +210,7 @@ void Game::turn(int idx)
 }
 
 
-void Game::launch_game_player_versus_player()
+void Game::launch_game_player_versus_player() // Main loop for two player
 {
     int i = 0;
     std::cout << " The game has began !" << std::endl;
@@ -219,12 +219,12 @@ void Game::launch_game_player_versus_player()
     {
         if (i == 0)
         {
-            std::cout << "PLAYER 1 MOOV" << std::endl << std::endl;
+            std::cout << CYAN << "PLAYER 1 MOOV" << DEFAULT << std::endl << std::endl;
             turn(i);
         }
         else
         {
-            std::cout << "PLAYER 2 MOOV" << std::endl << std::endl;
+            std::cout << MAGENTA << "PLAYER 2 MOOV" << DEFAULT << std::endl << std::endl;
             turn(i);
         }
         if (i == 0)
@@ -232,11 +232,10 @@ void Game::launch_game_player_versus_player()
         else
             i = 0;
         this->display_game();
-        
     }
 }
 
-bool Game::check_line(int a, int b, int c)
+bool Game::check_line(int a, int b, int c) // Check a line for possible alignement
 {
     int p1 = 0;
     int p2 = 0;
@@ -244,7 +243,7 @@ bool Game::check_line(int a, int b, int c)
 
     for (int i = 0; i < 3; i++)
     {
-        if (DET_PLAYER(values[i]) == 1)
+        if (DET_PLAYER(values[i]) == 1) // DET_PLAYER is a macro expent in Game.hpp
             p1++;
         if (DET_PLAYER(values[i]) == 2)
             p2++;
@@ -262,7 +261,7 @@ bool Game::check_line(int a, int b, int c)
     return (false);
 }
 
-bool Game::checker()
+bool Game::checker() // Check the board for a potential victory
 {
     for (int j = 0; j < 3; j++)
     {
@@ -282,11 +281,10 @@ bool Game::checker()
     return (false);
 }
 
-bool Game::execute_moov(int i, int j, int value)
+bool Game::execute_moov(int i, int j, int value) // Tries to place a piece in at the map[i][j] case
 {
     if (!this->map[i][j].is_allowed( value ))
     {
-        // std::cout << RED << "HERE" << DEFAULT << std::endl;
         return (false);
     }
     else

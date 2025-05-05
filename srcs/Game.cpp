@@ -10,23 +10,37 @@ Game::Game()
             map[i][j] = Case();
         }
     }
+    player[0] = Player();
+    player[1] = Player(); 
 }
 
 void Game::display_game()
 {
-    
+    std::cout << std::endl;
+    std::cout << YELLOW << "    0   1   2 " << DEFAULT << std::endl;
     for (int i = 0; i < 3; i++)
     {
-        std::cout << "  --- --- ---" << std::endl;
+        int tmp;
+        std::cout << "   --- --- ---" << std::endl;
         for (int j = 0; j < 3; j++)
         {
-            std::cout << " | ";
-            std::cout << map[i][j].getCurrent();
+            if (j == 0)
+                std::cout << YELLOW <<  i << DEFAULT << " | ";
+            else
+                std::cout << " | ";
+            tmp = map[i][j].getCurrent();
+            std::cout << "D" << tmp;
+            if (tmp == P2_SMALL || tmp == P2_MEDIUM || tmp == P2_BIG)
+                std::cout << MAGENTA << tmp - 3 << DEFAULT;
+            else if (tmp == P1_SMALL || tmp == P1_MEDIUM || tmp == P1_BIG)
+                std::cout << CYAN << tmp << DEFAULT;
+            else
+                std::cout << tmp;
         }
         std::cout << " | ";
         std::cout << std::endl;
     }
-    std::cout << "  --- --- ---" << std::endl;
+    std::cout << "   --- --- ---" << std::endl;
     std::cout << std::endl;
 }
 
@@ -35,24 +49,77 @@ Game::~Game()
     std::cout << "Game destructor called" << std::endl;
 }
 
+void Game::turn(int idx)
+{
+    int n;
+
+    std::cout << "Available piece : ";
+    player[idx].display_moov();
+    std::cout << std::endl;
+    std::cout << "1: Moov a placed piece" << std::endl;
+    std::cout << "2: Moov a stored piece" << std::endl;
+    std::cin >> n;
+    if (n < 1 || n > 2)
+        return ;
+    if (n == 1)
+    {
+        return ;
+    }
+    else
+    {
+        int p;
+        std::cout << "You choose to place a stored piece" << std::endl;
+        std::cout << "Available piece : ";
+        player[idx].display_moov();
+        std::cout << std::endl;
+        std::cout << "What piece do u want to place" << std::endl;
+        std::cin >> p;
+        if (player[idx].allowed_moov(p))
+        {
+            std::cout << "DEBUG P = " << p << std::endl;
+            int a, b, c;
+            std::cout << "Row ? : ";
+            std::cin >> a;
+            std::cout << std::endl;
+            std::cout << "Column ? : ";
+            std::cin >> b;
+            if (idx == 1)
+                c = p + 3;
+            else
+                c = p;
+            if (execute_moov(a,b,c))
+                player[idx].play(p);
+        }
+        else
+        {
+            std::cout << "Unavailable moov" << std::endl;
+        }
+
+    }
+}
+
+
 void Game::launch_game()
 {
-    int i = 1;
+    int i = 0;
     std::cout << " The game has began !" << std::endl;
+    this->display_game();
     while (!this->checker())
     {
-        if (i == 1)
+        if (i == 0)
         {
-            std::string temp;
             std::cout << "PLAYER 1 MOOV" << std::endl << std::endl;
-            execute_moov(0,0, P1_SMALL);
+            turn(i);
         }
         else
         {
             std::cout << "PLAYER 2 MOOV" << std::endl << std::endl;
-            execute_moov(0,0, P2_MEDIUM);
+            turn(i);
         }
-        i = -i;
+        if (i == 0)
+            i = 1;
+        else
+            i = 0;
         this->display_game();
         
     }
@@ -107,7 +174,10 @@ bool Game::checker()
 bool Game::execute_moov(int i, int j, int value)
 {
     if (!this->map[i][j].is_allowed( value ))
+    {
+        // std::cout << RED << "HERE" << DEFAULT << std::endl;
         return (false);
+    }
     else
     {
         this->map[i][j].setCase( value );

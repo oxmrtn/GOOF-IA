@@ -19,7 +19,7 @@ int Case::getCurrent()
 
 void Case::setCase(int value)
 {
-    if (latest >= 2)
+    if (latest >= 3)
         return ;
     this->tab[latest + 1] = value;
     latest++;

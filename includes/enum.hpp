@@ -2,11 +2,11 @@
 
 enum moov
 {
-    EMPTY,
-    P1_SMALL,
-    P1_MEDIUM,
-    P1_BIG,
-    P2_SMALL,
-    P2_MEDIUM,
-    P2_BIG
+    EMPTY, // 0
+    P1_SMALL, // 1
+    P1_MEDIUM, // 2
+    P1_BIG, // 3
+    P2_SMALL, // 4
+    P2_MEDIUM, // 5
+    P2_BIG // 6
 };

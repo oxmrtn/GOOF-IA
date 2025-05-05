@@ -1,0 +1,18 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include "./enum.hpp"
+
+class Player
+{
+    private:
+        std::vector<int> moov;
+    public:
+        Player(); 
+        ~Player();
+        void display_moov();
+        bool allowed_moov(int play);
+        void play(int play);
+};

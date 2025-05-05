@@ -15,4 +15,5 @@ class Player
         void display_moov();
         bool allowed_moov(int play);
         void play(int play);
+        bool moov_left();
 };

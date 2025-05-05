@@ -42,3 +42,15 @@ void Player::play(int play)
     }
     return ;
 }
+
+bool Player::moov_left()
+{
+    for (int i = 0; i < 6; i++)
+    {
+        if (moov[i] != 0)
+        {
+            return (true);
+        }
+    }
+    return (false);
+}

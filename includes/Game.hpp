@@ -12,7 +12,7 @@
     ((x) == P1_SMALL || (x) == P1_MEDIUM || (x) == P1_BIG ? 1 : \
     ((x) == P2_SMALL || (x) == P2_MEDIUM || (x) == P2_BIG ? 2 : 0))
 
-    
+
 #define BLACK       "\033[30m"
 #define RED         "\033[31m"
 #define GREEN       "\033[32m"
@@ -33,7 +33,7 @@ class Game
     public:
         Game();
         ~Game();
-        void launch_game();
+        void launch_game_player_versus_player();
         void display_game();
         bool checker();
         bool check_line(int a, int b, int c);

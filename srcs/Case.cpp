@@ -21,8 +21,8 @@ void Case::setCase(int value)
 {
     if (latest >= 3)
         return ;
-    this->tab[latest + 1] = value;
     latest++;
+    this->tab[latest] = value;
 }
 
 void Case::undo_move()

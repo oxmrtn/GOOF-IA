@@ -9,6 +9,6 @@ int main(int argc, char **argv)
         return (1);
     }
     Game init = Game();
-    init.launch_game();
+    init.launch_game_player_versus_player();
     return (0);
 }

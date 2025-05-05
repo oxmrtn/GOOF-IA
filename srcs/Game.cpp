@@ -21,15 +21,14 @@ void Game::display_game()
     for (int i = 0; i < 3; i++)
     {
         int tmp;
-        std::cout << "   --- --- ---" << std::endl;
+        std::cout << YELLOW << "   --- --- ---" << DEFAULT << std::endl;
         for (int j = 0; j < 3; j++)
         {
             if (j == 0)
                 std::cout << YELLOW <<  i << DEFAULT << " | ";
             else
-                std::cout << " | ";
+                std::cout << YELLOW << " | " << DEFAULT;
             tmp = map[i][j].getCurrent();
-            std::cout << "D" << tmp;
             if (tmp == P2_SMALL || tmp == P2_MEDIUM || tmp == P2_BIG)
                 std::cout << MAGENTA << tmp - 3 << DEFAULT;
             else if (tmp == P1_SMALL || tmp == P1_MEDIUM || tmp == P1_BIG)
@@ -37,10 +36,10 @@ void Game::display_game()
             else
                 std::cout << tmp;
         }
-        std::cout << " | ";
+        std::cout << YELLOW << " | " << DEFAULT;
         std::cout << std::endl;
     }
-    std::cout << "   --- --- ---" << std::endl;
+    std::cout << YELLOW << "   --- --- ---" << DEFAULT << std::endl;
     std::cout << std::endl;
 }
 
@@ -53,53 +52,165 @@ void Game::turn(int idx)
 {
     int n;
 
-    std::cout << "Available piece : ";
-    player[idx].display_moov();
-    std::cout << std::endl;
-    std::cout << "1: Moov a placed piece" << std::endl;
-    std::cout << "2: Moov a stored piece" << std::endl;
-    std::cin >> n;
-    if (n < 1 || n > 2)
-        return ;
-    if (n == 1)
+    while (true)
     {
-        return ;
-    }
-    else
-    {
-        int p;
-        std::cout << "You choose to place a stored piece" << std::endl;
-        std::cout << "Available piece : ";
+        std::cout << "Available pieces: ";
         player[idx].display_moov();
-        std::cout << std::endl;
-        std::cout << "What piece do u want to place" << std::endl;
-        std::cin >> p;
-        if (player[idx].allowed_moov(p))
+        std::cout << "\nChoose an action:\n";
+        std::cout << "1: Move a placed piece\n";
+        std::cout << "2: Place a stored piece\n";
+
+        std::cout << "Your choice: ";
+        std::cin >> n;
+
+        if (std::cin.fail())
         {
-            std::cout << "DEBUG P = " << p << std::endl;
-            int a, b, c;
-            std::cout << "Row ? : ";
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
+        if (n == 1)
+        {
+            int a,b,c;
+            std::cout << "Which piece do you want to move ? -1 to get back to previous menu " << std::endl;
+            std::cout << "Enter row: ";
             std::cin >> a;
-            std::cout << std::endl;
-            std::cout << "Column ? : ";
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+            std::cout << "Enter column: ";
             std::cin >> b;
-            if (idx == 1)
-                c = p + 3;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+            if (a == -1 || b == -1)
+                continue;
+            c = this->map[a][b].getCurrent();
+            if (idx == 1 && (c != P2_SMALL && c != P2_MEDIUM && c != P2_BIG))
+            {
+                std::cout << "This is not your piece !" << std::endl;
+                continue;
+            }
+            else if (idx == 0 && (c != P1_SMALL && c != P1_MEDIUM && c != P1_BIG))
+            {
+                std::cout << "This is not your piece !" << std::endl;
+                continue;
+            }
+            std::cout << "CASE " << a << "; " << b << std::endl;
+            this->map[a][b].undo_move();
+            std::cout << "Where do you want to place the piece ? -1 to abort" << std::endl;
+            int x, y;
+            std::cout << "Enter row: ";
+            std::cin >> x;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+            std::cout << "Enter column: ";
+            std::cin >> y;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+            if (x == -1 || y == -1)
+                continue;
+            std::cout << "CASE " << x << "; " << y << std::endl;
+            if (execute_moov(x, y, c))
+            {
+                std::cout << "Move executed.\n";
+                break;
+            }
             else
-                c = p;
-            if (execute_moov(a,b,c))
+            {
+                std::cout << "Move execution failed. Try again.\n";
+                continue;
+            }
+        }
+        else if (n == 2)
+        {
+            int p;
+            if (!player[idx].moov_left())
+                continue;
+            std::cout << "You chose to place a stored piece.\n";
+            std::cout << "Available pieces: ";
+            player[idx].display_moov();
+            std::cout << "\nWhich piece do you want to place? -1 to get back to previous menu ";
+
+            std::cin >> p;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+            if (p == -1)
+                continue;
+            if (!player[idx].allowed_moov(p))
+            {
+                std::cout << "Unavailable move.\n";
+                continue;
+            }
+
+            int a, b;
+            std::cout << "Enter row: ";
+            std::cin >> a;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+
+            std::cout << "Enter column: ";
+            std::cin >> b;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+                std::cout << "Invalid input.\n";
+                continue;
+            }
+
+            int c = (idx == 1) ? p + 3 : p;
+            if (execute_moov(a, b, c))
+            {
                 player[idx].play(p);
+                std::cout << "Move executed.\n";
+                break;
+            }
+            else
+            {
+                std::cout << "Move execution failed. Try again.\n";
+                continue;
+            }
         }
         else
         {
-            std::cout << "Unavailable moov" << std::endl;
+            std::cout << "Please choose either 1 or 2.\n";
         }
-
     }
 }
 
 
-void Game::launch_game()
+void Game::launch_game_player_versus_player()
 {
     int i = 0;
     std::cout << " The game has began !" << std::endl;

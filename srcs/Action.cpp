@@ -1,0 +1,24 @@
+#include "../includes/Action.hpp"
+
+Action::Action(int x1, int y1, int piece)
+{
+    this->type = "stored";
+    this->moovs = {x1, y1, piece};
+}
+
+Action::Action(int x1, int y1, int x2, int y2, int piece)
+{
+    this->type = "placed";
+    this->moovs = {x1, y1, x2, y2, piece};
+}
+
+Action::~Action(){}
+
+int Action::getMoovI(int idx)
+{
+    if (idx < 0 || static_cast<unsigned long>( idx ) > moovs.size())
+        return (-1);
+    return (moovs[idx]);
+}
+
+std::string Action::getType() {return (type);}

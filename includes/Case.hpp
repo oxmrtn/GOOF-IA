@@ -12,6 +12,7 @@ class Case
         int latest;
     public:
         Case();
+        Case(const Case& other);
         ~Case();
         int     getCurrent( void );
         void    setCase( int value );

@@ -14,6 +14,20 @@ Game::Game()
     player[1] = Player(); 
 }
 
+Game::Game(const Game& other)
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            this->map[i][j] = other.map[i][j];
+        }
+    }
+    this->player[0] = other.player[0];
+    this->player[1] = other.player[1];
+}
+
+
 void Game::display_game() // Human readable display of the board
 {
     std::cout << std::endl;

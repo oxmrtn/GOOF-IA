@@ -9,6 +9,16 @@ Case::Case()
     latest = 0;
 }
 
+Case::Case(const Case & other)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        this->tab[i] = other.tab[i];
+    }
+    this->latest = other.latest;
+}
+
+
 Case::~Case()
 {}
 

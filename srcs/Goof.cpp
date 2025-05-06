@@ -10,7 +10,7 @@ void Goof::updateState(Game state)
     this->currentState = state;
 }
 
-void Goof::setActionList()
+void Goof::setActionList() // Determine every possible moov for a position
 {
     Player a_p = this->currentState.getPlayer(this->player);
     int available_piece[4] = {0, 0, 0};
@@ -48,3 +48,24 @@ void Goof::setActionList()
         }
     }
 }
+
+Game & Goof::result(Action a, const Game & state)
+{
+    Game to_return = state;
+    if (a.getType() == "stored")
+    {
+        to_return.player[player].play(a.getMoovI(2));
+        to_return.execute_moov(a.getMoovI(0), a.getMoovI(1), a.getMoovI(2));
+    }
+    else
+    {
+        int tmp = to_return.map[a.getMoovI(0)][a.getMoovI(1)].getCurrent();
+        to_return.map[a.getMoovI(0)][a.getMoovI(1)].undo_move();
+        if (to_return.checker())
+            return (to_return);
+        to_return.execute_moov(a.getMoovI(2), a.getMoovI(3), tmp);
+    }
+    return (to_return);
+}
+
+

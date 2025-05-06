@@ -10,7 +10,8 @@ class Player
     private:
         std::vector<int> moov;
     public:
-        Player(); 
+        Player();
+        Player(const Player & other);
         ~Player();
         void display_moov();
         bool allowed_moov(int play);

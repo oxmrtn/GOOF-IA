@@ -24,6 +24,6 @@ class Goof
         Action minMax_decision();
         int min_value(Game state);
         int max_Value(Game state);
-        Game result(Action a,Game state);
-        int Utility(Game state);
+        Game & result(Action a, const Game & state);
+        int Utility(const Game & state);
 };

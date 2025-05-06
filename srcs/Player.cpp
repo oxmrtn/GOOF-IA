@@ -3,6 +3,11 @@
 Player::Player() : moov{1, 1, 2, 2, 3, 3}
 {}
 
+Player::Player(const Player & other)
+{
+    this->moov = other.moov;
+}
+
 Player::~Player()
 {}
 

@@ -12,6 +12,7 @@ Game::Game()
     }
     player[0] = Player();
     player[1] = Player(); 
+    up = 0 //0 if it's player 1's turn, 1 if it's player 2's turn 
 }
 
 Game::Game(const Game& other)
@@ -229,26 +230,25 @@ void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 t
 
 void Game::launch_game_player_versus_player() // Main loop for two player
 {
-    int i = 0;
     int tmp = 0;
     std::cout << " The game has began !" << std::endl;
     this->display_game();
     while (!(tmp = this->checker()))
     {
-        if (i == 0)
+        if (up == 0)
         {
             std::cout << CYAN << "PLAYER 1 MOOV" << DEFAULT << std::endl << std::endl;
-            turn(i);
+            turn(up);
         }
         else
         {
             std::cout << MAGENTA << "PLAYER 2 MOOV" << DEFAULT << std::endl << std::endl;
-            turn(i);
+            turn(up);
         }
-        if (i == 0)
-            i = 1;
+        if (up == 0)
+            up = 1;
         else
-            i = 0;
+            up = 0;
         this->display_game();
     }
     if (tmp == 1)
@@ -326,4 +326,97 @@ Player Game::getPlayer(int idx)
     if (idx != 0 || idx != 1)
         return (nullptr);
     return (player[i]);
+}
+int Game::getUp()
+{
+    return this->up;
+}
+
+bool []Game::check_two_cases(int a, int b, int c) // Check a line for possible 2 pieces in a row
+{
+    int p1 = 0;
+    int p2 = 0;
+    int values[3] = {a, b, c};
+    bool tab[2] = {0,0};
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (DET_PLAYER(values[i]) == 1) // DET_PLAYER is a macro expent in Game.hpp
+            p1++;
+        if (DET_PLAYER(values[i]) == 2)
+            p2++;
+    }
+    if (p1 == 2)
+    {
+        tab[0] = 1;
+    }
+    if (p2 == 2)
+    {
+        tab[1] = 1;
+    }
+    return tab;
+}
+
+int []Game::checker_two_cases() // Check the board for a potential 2 pieces in a row
+{   
+    int tab[2] = {0,0};
+
+    for (int j = 0; j < 3; j++)
+    {
+        int tmp = check_two_cases(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent());
+        if (tmp[0])
+        {
+            tab[0] = 1;
+        }
+        if(tmp[1])
+        {
+            tab[1] = 1;
+        }
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        int tmp = check_two_cases(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
+        if (tmp[0])
+        {
+            tab[0] += 1;
+        }
+        if(tmp[1])
+        {
+            tab[1] += 1;
+        }
+    }
+    {
+        int tmp = check_two_cases(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
+        if (tmp[0])
+        {
+            tab[0] += 1;
+        }
+        if(tmp[1])
+        {
+            tab[1] += 1;
+        }
+    }
+    {
+        int tmp = check_two_cases(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
+        if (tmp[0])
+        {
+            tab[0] += 1;
+        }
+        if(tmp[1])
+        {
+            tab[1] += 1;
+        }
+    }
+    return tab;
+}
+
+int Game::check_center() // Check the state of the center case, return 0 if no pieces, 1 if player 1's piece, 2 if player 2's piece
+{
+    if (DET_PLAYER(map[1][1].getCurrent()) == 1)
+        return 1;
+    
+    if (DET_PLAYER(map[1][1].getCurrent()) == 2)
+        return 2;
+    
+    return 0;
 }

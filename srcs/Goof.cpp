@@ -69,3 +69,5 @@ Game & Goof::result(Action a, const Game & state)
 }
 
 
+
+

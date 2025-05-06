@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "./Game.hpp"
+#include "./Action.hpp"
 
 class Goof
 {

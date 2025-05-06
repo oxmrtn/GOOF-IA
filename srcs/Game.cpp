@@ -306,3 +306,10 @@ bool Game::execute_moov(int i, int j, int value) // Tries to place a piece in at
         return (true);
     }
 }
+
+Player Game::getPlayer(int idx)
+{
+    if (idx != 0 || idx != 1)
+        return (nullptr);
+    return (player[i]);
+}

@@ -13,7 +13,7 @@ class Goof
     private:
         Game currentState;
         std::vector<Action> actionList;
-        int depht;
+        int depth;
         int player;
     
     public:
@@ -26,4 +26,4 @@ class Goof
         int max_Value(Game state);
         Game result(Action a,Game state);
         int Utility(Game state);
-}
+};

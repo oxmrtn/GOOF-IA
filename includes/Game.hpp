@@ -29,6 +29,7 @@ class Game
     private:
         Case map[3][3];
         Player player[2];
+        int up;
 
     public:
         Game();
@@ -39,4 +40,8 @@ class Game
         int check_line(int a, int b, int c);
         bool execute_moov(int i, int j, int value);
         void turn(int idx);
+        int getUp();
+        int []check_two_cases(int a, int b, int c);
+        int []checker_two_cases();
+        int check_center();
 };

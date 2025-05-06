@@ -17,7 +17,7 @@ class Goof
         int player;
     
     public:
-        Goof(Game initState);
+        Goof(Game initState, int player);
         ~Goof();
         void updateState(Game state);
         void setActionList();
@@ -25,5 +25,5 @@ class Goof
         int min_value(Game state);
         int max_Value(Game state);
         Game result(Action a,Game state);
-        int Utility(Game state);
+        int utility(Game state);
 }

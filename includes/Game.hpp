@@ -35,8 +35,8 @@ class Game
         ~Game();
         void launch_game_player_versus_player();
         void display_game();
-        bool checker();
-        bool check_line(int a, int b, int c);
+        int checker();
+        int check_line(int a, int b, int c);
         bool execute_moov(int i, int j, int value);
         void turn(int idx);
 };

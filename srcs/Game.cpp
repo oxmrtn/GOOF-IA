@@ -106,8 +106,9 @@ void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 t
                 std::cout << "This is not your piece !" << std::endl;
                 continue;
             }
-            std::cout << "CASE " << a << "; " << b << std::endl;
             this->map[a][b].undo_move();
+            if (this->checker())
+                return ;
             std::cout << "Where do you want to place the piece ? -1 to abort" << std::endl;
             int x, y;
             std::cout << "Enter row: ";
@@ -129,7 +130,10 @@ void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 t
                 continue;
             }
             if (x == -1 || y == -1)
+            {
+                execute_moov(a, b, c);
                 continue;
+            }
             std::cout << "CASE " << x << "; " << y << std::endl;
             if (execute_moov(x, y, c))
             {
@@ -209,13 +213,13 @@ void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 t
     }
 }
 
-
 void Game::launch_game_player_versus_player() // Main loop for two player
 {
     int i = 0;
+    int tmp = 0;
     std::cout << " The game has began !" << std::endl;
     this->display_game();
-    while (!this->checker())
+    while (!(tmp = this->checker()))
     {
         if (i == 0)
         {
@@ -233,9 +237,13 @@ void Game::launch_game_player_versus_player() // Main loop for two player
             i = 0;
         this->display_game();
     }
+    if (tmp == 1)
+        std::cout << CYAN << " PLAYER 1 WON ! " << DEFAULT <<  std::endl;
+    else
+        std::cout << MAGENTA << " PLAYER 2 WON ! " << DEFAULT << std::endl;
 }
 
-bool Game::check_line(int a, int b, int c) // Check a line for possible alignement
+int Game::check_line(int a, int b, int c) // Check a line for possible alignement
 {
     int p1 = 0;
     int p2 = 0;
@@ -250,35 +258,40 @@ bool Game::check_line(int a, int b, int c) // Check a line for possible aligneme
     }
     if (p1 == 3)
     {
-        std::cout << "Player 1 won" << std::endl;
-        return (true);
+        return (1);
     }
     if (p2 == 3)
     {
-        std::cout << "Player 2 won" << std::endl;
-        return (true);
+        return (2);
     }
-    return (false);
+    return (0);
 }
 
-bool Game::checker() // Check the board for a potential victory
+int Game::checker() // Check the board for a potential victory
 {
     for (int j = 0; j < 3; j++)
     {
-        if (check_line(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent()))
-            return (true);
+        int tmp = check_line(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent());
+        if (tmp)
+            return (tmp);
     }
     for (int i = 0; i < 3; i++)
     {
-        if (check_line(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent()))
-            return (true);
+        int tmp = check_line(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
+        if (tmp)
+            return (tmp);
     }
-    if (check_line(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent()))
-        return (true);
-
-    if (check_line(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent()))
-        return (true);
-    return (false);
+    {
+        int tmp = check_line(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
+        if (tmp)
+            return (tmp);
+    }
+    {
+        int tmp = check_line(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
+        if (tmp)
+            return (tmp);
+    }
+    return (0);
 }
 
 bool Game::execute_moov(int i, int j, int value) // Tries to place a piece in at the map[i][j] case

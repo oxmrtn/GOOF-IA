@@ -168,8 +168,7 @@ int Goof::utility2(Game state)
         {
             for(int j = 0; j<3; j++)
             {
-                /* 
-                switch(map[i][j])
+                switch(state.map[i][j].getCurrent())
                 {
                     case P1_SMALL: score += 10;
                     break;
@@ -186,7 +185,6 @@ int Goof::utility2(Game state)
                     default:
                     break;
                 }
-                */
             }
         }
         
@@ -227,8 +225,7 @@ int Goof::utility2(Game state)
         {
             for(int j = 0; j<3; j++)
             {
-                /* 
-                switch(map[i][j])
+                switch(state.map[i][j].getCurrent())
                 {
                     case P1_SMALL: score -= 10;
                     break;
@@ -245,7 +242,6 @@ int Goof::utility2(Game state)
                     default:
                     break;
                 }
-                */
             }
         }
 

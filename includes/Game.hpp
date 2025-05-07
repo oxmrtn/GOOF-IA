@@ -37,6 +37,7 @@ class Game
     public:
         Game();
         Game(const Game & other);
+        Game & operator=(const Game & other);
         ~Game();
         void launch_game_player_versus_player();
         void launch_game_player_versus_ia(int bot_player);

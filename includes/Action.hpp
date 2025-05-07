@@ -12,6 +12,7 @@ class Action
     public:
         Action();
         Action(const Action& other);
+        Action & operator=(const Action & other);
         Action(int x1, int y1, int piece);
         Action(int x1, int y1, int x2, int y2, int piece);
         ~Action();

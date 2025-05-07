@@ -2,7 +2,6 @@
 
 Game::Game()
 {
-    std::cout << "Game default constructor called" << std::endl;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -15,6 +14,25 @@ Game::Game()
     up = 0; //0 if it's player 1's turn, 1 if it's player 2's turn 
 }
 
+Game& Game::operator=(const Game& other)
+{
+    if (this != &other)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                this->map[i][j] = other.map[i][j];
+            }
+        }
+        this->player[0] = other.player[0];
+        this->player[1] = other.player[1];
+        this->up = other.up;
+    }
+    return *this;
+}
+
+
 Game::Game(const Game& other)
 {
     for (int i = 0; i < 3; ++i)
@@ -26,6 +44,7 @@ Game::Game(const Game& other)
     }
     this->player[0] = other.player[0];
     this->player[1] = other.player[1];
+    this->up = other.up;
 }
 
 
@@ -59,9 +78,7 @@ void Game::display_game() // Human readable display of the board
 }
 
 Game::~Game()
-{
-    std::cout << "Game destructor called" << std::endl;
-}
+{}
 
 void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 turn and idx = 1 for player 2 turn.
 {
@@ -287,7 +304,6 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
                 turn(this->up);
             }
         }
-
         if(bot_player == 1)
         {    
             if (this->up == 0)
@@ -323,6 +339,7 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
     else
         std::cout << MAGENTA << " PLAYER 2 WON ! " << DEFAULT << std::endl;
 }
+
 
 int Game::check_line(int a, int b, int c) // Check a line for possible alignement
 {

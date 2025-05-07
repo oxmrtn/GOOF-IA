@@ -18,12 +18,27 @@ Case::Case(const Case & other)
     this->latest = other.latest;
 }
 
+Case& Case::operator=(const Case& other)
+{
+    if (this != &other) // auto-affectation
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            this->tab[i] = other.tab[i];
+        }
+        this->latest = other.latest;
+    }
+    return *this;
+}
+
 
 Case::~Case()
 {}
 
 int Case::getCurrent() // Return the current states of the case
 {
+    if (latest < 0 || 4 < latest)
+        return (0);
     return (tab[latest]);
 }
 

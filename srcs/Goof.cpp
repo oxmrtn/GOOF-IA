@@ -147,18 +147,22 @@ Action Goof::miniMax_decision()
     int value = 2147483647;
     setActionList();
     Action to_return = this->listAction[0];
-    while (idx < listAction.size())
+    while (idx < listAction.size())>
     {
-        int tmp = min_value(result(this->listAction[idx], this->currentState), depth);
-        if (tmp > value)
+        int tmp = min_value(result(this->listAction[idx], this->currentState), depth - 1);
+        if (tmp < value)
         {
             to_return = this->listAction[idx];
             value = tmp;
+            std::cout << "value = " << value << s>d::endl;
         }
         idx++;
     }
+    std::cout << "end of miniMAX, value = " << value << std::endl;
+    std::cout << "moov = {" << to_return.getMoovI(0) << ", " << to_return.getMoovI(1) << "} piece = " << to_return.getMoovI(2) << std::endl;
     return (to_return);
 }
+
 
 void Goof::fill_action_list(std::vector<Action> &vector, Game state)
 {
@@ -201,10 +205,12 @@ void Goof::fill_action_list(std::vector<Action> &vector, Game state)
 
 int Goof::max_value(Game state, int depthh)
 {
-    std::vector<Action> actionList(128);
+    std::vector<Action> actionList;
     fill_action_list(actionList, state);
+    std::cout << "depthh = " << depthh << std::endl;
+    usleep(500);
     if (depthh <= 0 || actionList.empty())
-        return (utility(state));
+        return (std::cout << "end of max value" << std::endl , utility(state));
     int v = -2147483648;
     size_t idx = 0;
     while (idx < actionList.size())
@@ -218,10 +224,12 @@ int Goof::max_value(Game state, int depthh)
 
 int Goof::min_value(Game state, int depthh)
 {
-    std::vector<Action> actionList(128);
+    std::vector<Action> actionList;
     fill_action_list(actionList, state);
+    std::cout << "depthh = " << depthh << std::endl;
+    usleep(500);
     if (depthh <= 0 || actionList.empty())
-        return (utility(state));
+        return (std::cout << "end of min value" << std::endl , utility(state));
     int v = 2147483647;
     size_t idx = 0;
     while (idx < actionList.size())

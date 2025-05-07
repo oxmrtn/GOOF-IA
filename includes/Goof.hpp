@@ -5,6 +5,8 @@
 #include <exception>
 #include <vector>
 #include <array>
+#include <unistd.h>
+
 
 #include "./Game.hpp"
 #include "./Action.hpp"

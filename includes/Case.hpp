@@ -13,6 +13,7 @@ class Case
     public:
         Case();
         Case(const Case& other);
+        Case & operator=(const Case & other);
         ~Case();
         int     getCurrent( void );
         void    setCase( int value );

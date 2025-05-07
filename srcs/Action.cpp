@@ -24,11 +24,22 @@ Action::Action(const Action& other)
     this->moovs = other.moovs;
 }
 
+Action& Action::operator=(const Action& other)
+{
+    if (this != &other)
+    {
+        this->type = other.type;
+        this->moovs = other.moovs;
+    }
+    return *this;
+}
+
+
 Action::~Action(){}
 
 int Action::getMoovI(int idx)
 {
-    if (idx < 0 || static_cast<unsigned long>( idx ) > moovs.size())
+    if (idx < 0 || static_cast<unsigned long>( idx ) >= moovs.size())
         return (-1);
     return (moovs[idx]);
 }

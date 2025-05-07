@@ -12,6 +12,7 @@ class Player
     public:
         Player();
         Player(const Player & other);
+        Player & operator=(const Player & other);
         ~Player();
         void display_moov();
         bool allowed_moov(int play);

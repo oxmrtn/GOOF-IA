@@ -8,6 +8,16 @@ Player::Player(const Player & other)
     this->moov = other.moov;
 }
 
+Player& Player::operator=(const Player& other)
+{
+    if (this != &other)
+    {
+        this->moov = other.moov;
+    }
+    return *this;
+}
+
+
 Player::~Player()
 {}
 

@@ -44,7 +44,7 @@ class Game
         Player getPlayer(int idx);
         friend class Goof;
         int getUp();
-        int []check_two_cases(int a, int b, int c);
-        int []checker_two_cases();
+        int *check_two_cases(int a, int b, int c);
+        int *checker_two_cases();
         int check_center();
 };

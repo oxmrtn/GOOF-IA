@@ -27,4 +27,4 @@ class Goof
         int max_value(Game state, int depthh);
         Game & result(Action a, const Game & state);
         int utility(Game state);
-}
+};

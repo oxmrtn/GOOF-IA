@@ -8,6 +8,7 @@
 
 #include "./Game.hpp"
 #include "./Action.hpp"
+#include "./enum.hpp"
 
 class Goof
 {
@@ -28,4 +29,5 @@ class Goof
         int max_value(Game state, int depthh);
         Game result(Action a, const Game & state);
         int utility(Game state);
+        int utility2(Game state);
 };

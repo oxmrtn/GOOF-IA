@@ -131,6 +131,137 @@ int Goof::utility(Game state)
     return (score);
 }
 
+int Goof::utility2(Game state)
+{
+    int score = 0;
+    std::array<int, 2> tmp;
+    int center;
+    //array map = state.getMap();
+    Player p1 = state.getPlayer(0);
+    Player p2 = state.getPlayer(1);
+    
+    if (this->player == 0)
+    {
+        if(state.checker()==1)
+            return (1000);
+        if(state.checker()==2)
+            return (-1000);
+
+        center = state.check_center();
+        if(center == 1)
+            score += 50;
+        else if (center == 2)
+            score -= 50;
+        tmp = state.checker_two_cases();
+        if (state.getUp() == 0)
+        {
+            score += 100 * tmp[0]; 
+            score -= 50 * tmp[1];
+        }
+        else
+        {
+            score -=100 * tmp[1];
+            score += 50 * tmp[0];
+        }
+
+        for(int i = 0; i<3; i++)
+        {
+            for(int j = 0; j<3; j++)
+            {
+                /* 
+                switch(map[i][j])
+                {
+                    case P1_SMALL: score += 10;
+                    break;
+                    case P1_MEDIUM: score += 20;
+                    break;
+                    case P1_BIG: score += 30;
+                    break;
+                    case P2_SMALL: score -= 10;
+                    break;
+                    case P2_MEDIUM: score -= 20;
+                    break;
+                    case P2_BIG: score -= 30;
+                    break;
+                    default:
+                    break;
+                }
+                */
+            }
+        }
+        
+        for(size_t i = 0; i < p1.getMoov().size(); i++)
+        {
+            score+=5;
+        }
+        for(size_t i = 0; i < p2.getMoov().size(); i++)
+        {
+            score-=5;
+        }
+
+    }
+    if (this->player == 1)
+    {
+        if (state.checker() == 1)
+            return (-1000);
+        if (state.checker() == 2)
+            return (1000);
+        center = state.check_center();
+        if (center == 1)
+            score -= 50;
+        else if (center == 2)
+            score += 50;
+        tmp = state.checker_two_cases();
+        if (state.getUp() == 0)
+        {
+            score -= 100*tmp[0];
+            score += 50*tmp[1];
+        }
+        else
+        {
+            score += 100*tmp[1];
+            score -= 50*tmp[0];
+        }
+
+        for(int i = 0; i<3; i++)
+        {
+            for(int j = 0; j<3; j++)
+            {
+                /* 
+                switch(map[i][j])
+                {
+                    case P1_SMALL: score -= 10;
+                    break;
+                    case P1_MEDIUM: score -= 20;
+                    break;
+                    case P1_BIG: score -= 30;
+                    break;
+                    case P2_SMALL: score += 10;
+                    break;
+                    case P2_MEDIUM: score += 20;
+                    break;
+                    case P2_BIG: score += 30;
+                    break;
+                    default:
+                    break;
+                }
+                */
+            }
+        }
+
+        for(size_t i = 0; i < p1.getMoov().size(); i++)
+        {
+            score-=5;
+        }
+        for(size_t i = 0; i < p2.getMoov().size(); i++)
+        {
+            score+=5;
+        }
+
+    }
+    return (score);
+}
+
 int min(int a, int b)
 {
     return (a < b ? a : b);

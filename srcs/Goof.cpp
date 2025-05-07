@@ -1,6 +1,6 @@
 #include "../includes/Goof.hpp"
 
-Goof::Goof(Game initState, int player) : actionList(128)
+Goof::Goof(Game initState, int player) : listAction(128)
 {
     this->currentState = initState;
     this->player = player;
@@ -55,7 +55,7 @@ void Goof::setActionList() // Determine every possible moov for a position
     }
 }
 
-Game & Goof::result(Action a, const Game & state)
+Game Goof::result(Action a, const Game & state)
 {
     Game to_return = state;
     if (a.getType() == "stored")
@@ -77,12 +77,11 @@ Game & Goof::result(Action a, const Game & state)
 
 int Goof::utility(Game state)
 {
-    int turn = state.getUp;
     int score = 0;
-    std::array<int, 2> tmp[2];
+    std::array<int, 2> tmp;
     int center;
     
-    if (this.player == 0)
+    if (this->player == 0)
     {
         if(state.checker()==1)
             return (1000);
@@ -94,18 +93,18 @@ int Goof::utility(Game state)
         else if (center == 2)
             score -= 50;
         tmp = state.checker_two_cases();
-        if (state.getUp == 0)
+        if (state.getUp() == 0)
         {
-            score += 100*tmp[0]; 
-            score -= 50*tmp[1];
+            score += 100 * tmp[0]; 
+            score -= 50 * tmp[1];
         }
         else
         {
-            score -=100*tmp[1];
-            score += 50*tmp[0];
+            score -=100 * tmp[1];
+            score += 50 * tmp[0];
         }
     }
-    if (this.player == 1)
+    if (this->player == 1)
     {
         if (state.checker() == 1)
             return (-1000);
@@ -117,7 +116,7 @@ int Goof::utility(Game state)
         else if (center == 2)
             score += 50;
         tmp = state.checker_two_cases();
-        if (state.getUp == 0)
+        if (state.getUp() == 0)
         {
             score -= 100*tmp[0];
             score += 50*tmp[1];
@@ -144,15 +143,15 @@ int max(int a, int b)
 Action Goof::miniMax_decision()
 {
     size_t idx = 0;
-    Action to_return;
     int value = 2147483647;
     setActionList();
-    while (idx < setActionList.size())
+    Action to_return = this->listAction[0];
+    while (idx < listAction.size())
     {
-        int tmp = min_value(result(this->listAction[i], this->currentState), depth);
+        int tmp = min_value(result(this->listAction[idx], this->currentState), depth);
         if (tmp > value)
         {
-            to_return = this->listAction[i];
+            to_return = this->listAction[idx];
             value = tmp;
         }
         idx++;

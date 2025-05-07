@@ -12,7 +12,7 @@ Game::Game()
     }
     player[0] = Player();
     player[1] = Player();
-    up = 0 //0 if it's player 1's turn, 1 if it's player 2's turn 
+    up = 0; //0 if it's player 1's turn, 1 if it's player 2's turn 
 }
 
 Game::Game(const Game& other)
@@ -323,9 +323,9 @@ bool Game::execute_moov(int i, int j, int value) // Tries to place a piece in at
 
 Player Game::getPlayer(int idx)
 {
-    if (idx != 0 || idx != 1)
-        return (nullptr);
-    return (player[i]);
+    if (idx != 0 && idx != 1)
+        throw std::out_of_range("error: Player index out of range");
+    return (player[idx]);
 }
 int Game::getUp()
 {
@@ -359,7 +359,7 @@ std::array<bool, 2> Game::check_two_cases(int a, int b, int c) // Check a line f
 
 std::array<int, 2> Game::checker_two_cases() // Check the board for potentials 2 pieces in a row
 {   
-    std::array<int, 2> tab[2] = {0,0};
+    std::array<int, 2> tab = {0,0};
 
     for (int j = 0; j < 3; j++)
     {
@@ -368,14 +368,14 @@ std::array<int, 2> Game::checker_two_cases() // Check the board for potentials 2
         {
             tab[0] = 1;
         }
-        if(tmp[1])
+        if (tmp[1])
         {
             tab[1] = 1;
         }
     }
     for (int i = 0; i < 3; i++)
     {
-        std::array<int, 2> tmp = check_two_cases(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
+        std::array<bool, 2> tmp = check_two_cases(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
         if (tmp[0])
         {
             tab[0] += 1;
@@ -386,7 +386,7 @@ std::array<int, 2> Game::checker_two_cases() // Check the board for potentials 2
         }
     }
     {
-        std::array<int, 2> tmp = check_two_cases(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
+        std::array<bool, 2> tmp = check_two_cases(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
         if (tmp[0])
         {
             tab[0] += 1;
@@ -397,7 +397,7 @@ std::array<int, 2> Game::checker_two_cases() // Check the board for potentials 2
         }
     }
     {
-        std::array<int, 2> tmp = check_two_cases(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
+        std::array<bool, 2> tmp = check_two_cases(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
         if (tmp[0])
         {
             tab[0] += 1;

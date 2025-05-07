@@ -4,7 +4,7 @@ Goof::Goof(Game initState, int player)
 {
     this->currentState = initState;
     this->player = player;
-    this->depth = 3;
+    this->depth = 5;
 }
 
 Goof::~Goof()
@@ -347,7 +347,7 @@ int Goof::max_value(Game state, int depthh)
   //std::cout << "depthh = " << depthh << std::endl;
     usleep(500);
     if (depthh <= 0 || actionList.empty())
-        return ( utility(state));
+        return ( utility2(state));
     int v = -2147483648;
     size_t idx = 0;
     while (idx < actionList.size())
@@ -366,7 +366,7 @@ int Goof::min_value(Game state, int depthh)
  // std::cout << "depthh = " << depthh << std::endl;
     usleep(500);
     if (depthh <= 0 || actionList.empty())
-        return (utility(state));
+        return (utility2(state));
     int v = 2147483647;
     size_t idx = 0;
     while (idx < actionList.size())

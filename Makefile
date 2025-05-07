@@ -19,7 +19,7 @@ CYAN        = \033[0;96m
 RESET_LINE  = \033[A\033[K
 
 # Files
-SRC_FILE    = main.cpp Game.cpp Case.cpp Player.cpp Action.cpp
+SRC_FILE    = main.cpp Game.cpp Case.cpp Player.cpp Action.cpp Goof.cpp 
 SRCS        = $(addprefix $(SRCS_DIR), $(SRC_FILE))
 OBJ         = $(patsubst $(SRCS_DIR)%.cpp, $(OBJ_DIR)%.o, $(SRCS))
 DEP         = $(OBJ:.o=.d)

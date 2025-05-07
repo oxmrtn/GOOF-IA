@@ -8,7 +8,6 @@
 #include "./Case.hpp"
 #include "./enum.hpp"
 #include "./Player.hpp"
-#include "./Goof.hpp"
 
 #define DET_PLAYER(x) \
     ((x) == P1_SMALL || (x) == P1_MEDIUM || (x) == P1_BIG ? 1 : \
@@ -24,6 +23,8 @@
 #define CYAN        "\033[36m"
 #define WHITE       "\033[37m"
 #define DEFAULT     "\033[0m"
+
+class Goof;
 
 class Game
 {
@@ -44,9 +45,9 @@ class Game
         bool execute_moov(int i, int j, int value);
         void turn(int idx);
         Player getPlayer(int idx);
-        friend class Goof;
         int getUp();
         std::array<bool, 2> check_two_cases(int a, int b, int c);
         std::array<int, 2> checker_two_cases();
         int check_center();
+        friend class Goof;
 };

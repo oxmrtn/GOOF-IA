@@ -1,5 +1,11 @@
 #include "../includes/Action.hpp"
 
+Action::Action()
+{
+    this->type = "empty";
+    this->moovs = {};
+}
+
 Action::Action(int x1, int y1, int piece)
 {
     this->type = "stored";
@@ -10,6 +16,12 @@ Action::Action(int x1, int y1, int x2, int y2, int piece)
 {
     this->type = "placed";
     this->moovs = {x1, y1, x2, y2, piece};
+}
+
+Action::Action(const Action& other)
+{
+    this->type = other.type;
+    this->moovs = other.moovs;
 }
 
 Action::~Action(){}

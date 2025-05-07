@@ -37,6 +37,7 @@ class Game
         Game(const Game & other);
         ~Game();
         void launch_game_player_versus_player();
+        void Game::launch_game_player_versus_ia(int bot_player)
         void display_game();
         int checker();
         int check_line(int a, int b, int c);

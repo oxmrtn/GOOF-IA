@@ -290,7 +290,7 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
 
                 if(action.getType() == "stored")
                 {
-                    execute_moov(action.getMoovI(0),action.getMoovI(1),action.getMoovI(2));
+                     execute_moov(action.getMoovI(0),action.getMoovI(1),action.getMoovI(2));
                 }else
                 {
                     this->map[action.getMoovI(0)][action.getMoovI(1)].undo_move();
@@ -318,11 +318,11 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
 
                 if(action.getType() == "stored")
                 {
-                    execute_moov(action.getMoovI(0),action.getMoovI(1),action.getMoovI(2));
+                    execute_moov(action.getMoovI(0),action.getMoovI(1),action.getMoovI(2) + 3);
                 }else
                 {
                     this->map[action.getMoovI(0)][action.getMoovI(1)].undo_move();
-                    execute_moov(action.getMoovI(2),action.getMoovI(3),action.getMoovI(4));
+                    execute_moov(action.getMoovI(2),action.getMoovI(3),action.getMoovI(4) + 3);
                 }
             }
         }

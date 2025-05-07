@@ -17,6 +17,7 @@ void Goof::updateState(Game state)
 
 void Goof::setActionList() // Determine every possible moov for a position
 {
+    this->listAction.clear();
     Player a_p = this->currentState.getPlayer(this->player);
     int available_piece[4] = {0, 0, 0, 0};
 
@@ -31,17 +32,24 @@ void Goof::setActionList() // Determine every possible moov for a position
         {
             Case tmp = currentState.map[i][j];
             int tmp2 = tmp.getCurrent();
-            if ((this->player == 0 && tmp2 > 3) || (this->player == 1 && tmp2 < 4))
-                continue;
+            int tmp3 = tmp2;
             if ( tmp2 > 4)
-                tmp2 -= 3;
+                tmp3 = tmp2 - 3;
             for (int k = 0; k < 4; k++)
             {
-                if (available_piece[k] != 0 && available_piece[k] > tmp2)
+           //   std::cout << "here" << std::endl
+                if (available_piece[k] != 0 && available_piece[k] > tmp3)
+                {
                     this->listAction.push_back(Action(i, j, available_piece[k]));
+               //   std::cout << "[DEBUG] Added stored action (" << i << ", " << j << ", " << available_piece[k] << ")" << std::endl;
+                }
             }
+            if ((this->player == 0 && tmp2 > 3) || (this->player == 1 && tmp2 < 4))
+                continue;
             if (tmp2 == 0)
                 continue ;
+            if ( tmp2 > 4)
+                tmp2 -= 3;
             for (int p = 0; p < 3; p++)
             {
                 for (int m = 0; m < 3; m++)
@@ -54,6 +62,7 @@ void Goof::setActionList() // Determine every possible moov for a position
             }
         }
     }
+ // std::cout << "out of setactionlist" << std::endl;
 }
 
 Game Goof::result(Action a, const Game & state)
@@ -147,7 +156,7 @@ Action Goof::miniMax_decision()
     int value = 2147483647;
     setActionList(); // pas sur que ca marche
     Action to_return = this->listAction[0];
-    std::cout << "things = " << this->listAction[0].getMoovI(0) << std::endl;
+  //std::cout << "things = " << this->listAction[0].getMoovI(0) << std::endl;
     while (idx < listAction.size())
     {
         int tmp = min_value(result(this->listAction[idx], this->currentState), depth - 1);
@@ -155,12 +164,12 @@ Action Goof::miniMax_decision()
         {
             to_return = this->listAction[idx];
             value = tmp;
-            std::cout << "value = " << value << std::endl;
+    //      std::cout << "value = " << value << std::endl;
         }
         idx++;
     }
-    std::cout << "end of miniMAX, value = " << value << std::endl;
-    std::cout << "moov = {" << to_return.getMoovI(0) << ", " << to_return.getMoovI(1) << "} piece = " << to_return.getMoovI(2) << std::endl;
+  //std::cout << "end of miniMAX, value = " << value << std::endl;
+  //std::cout << "moov = {" << to_return.getMoovI(0) << ", " << to_return.getMoovI(1) << "} piece = " << to_return.getMoovI(2) << std::endl;
     return (to_return);
 }
 
@@ -208,10 +217,10 @@ int Goof::max_value(Game state, int depthh)
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
-    std::cout << "depthh = " << depthh << std::endl;
+  //std::cout << "depthh = " << depthh << std::endl;
     usleep(500);
     if (depthh <= 0 || actionList.empty())
-        return (std::cout << "end of max value" << std::endl , utility(state));
+        return ( utility(state));
     int v = -2147483648;
     size_t idx = 0;
     while (idx < actionList.size())
@@ -227,10 +236,10 @@ int Goof::min_value(Game state, int depthh)
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
-    std::cout << "depthh = " << depthh << std::endl;
+ // std::cout << "depthh = " << depthh << std::endl;
     usleep(500);
     if (depthh <= 0 || actionList.empty())
-        return (std::cout << "end of min value" << std::endl , utility(state));
+        return (utility(state));
     int v = 2147483647;
     size_t idx = 0;
     while (idx < actionList.size())

@@ -6,6 +6,7 @@
 #include <array>
 
 #include "./Case.hpp"
+#include "./Action.hpp"
 #include "./enum.hpp"
 #include "./Player.hpp"
 
@@ -38,7 +39,7 @@ class Game
         Game(const Game & other);
         ~Game();
         void launch_game_player_versus_player();
-        void Game::launch_game_player_versus_ia(int bot_player)
+        void launch_game_player_versus_ia(int bot_player);
         void display_game();
         int checker();
         int check_line(int a, int b, int c);
@@ -51,3 +52,5 @@ class Game
         int check_center();
         friend class Goof;
 };
+
+#include "./Goof.hpp"

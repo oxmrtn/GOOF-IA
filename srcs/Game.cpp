@@ -269,7 +269,7 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
             if (this->up == 0)
             {
                 std::cout << CYAN << "PLAYER 1 MOOV" << DEFAULT << std::endl << std::endl;
-                Goof goof_ia = Goof(this, bot_player);
+                Goof goof_ia = Goof(*this, bot_player);
                 Action action = goof_ia.miniMax_decision();
 
                 if(action.getType() == "stored")
@@ -298,7 +298,7 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
             else
             {
                 std::cout << CYAN << "PLAYER 2 MOOV" << DEFAULT << std::endl << std::endl;
-                Goof goof_ia = Goof(this, bot_player);
+                Goof goof_ia = Goof(*this, bot_player);
                 Action action = goof_ia.miniMax_decision();
 
                 if(action.getType() == "stored")

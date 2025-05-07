@@ -13,7 +13,7 @@ class Goof
 {
     private:
         Game currentState;
-        std::vector<Action> actionList;
+        std::vector<Action> listAction;
         int depth;
         int player;
     
@@ -22,9 +22,10 @@ class Goof
         ~Goof();
         void updateState(Game state);
         void setActionList();
-        Action minMax_decision();
-        int min_value(Game state);
-        int max_Value(Game state);
+        void fill_action_list(std::vector<Action> &vector, Game state);
+        Action miniMax_decision();
+        int min_value(Game state, int depthh);
+        int max_value(Game state, int depthh);
         Game & result(Action a, const Game & state);
         int utility(Game state);
-}
+};

@@ -11,7 +11,7 @@ Game::Game()
         }
     }
     player[0] = Player();
-    player[1] = Player(); 
+    player[1] = Player();
     up = 0 //0 if it's player 1's turn, 1 if it's player 2's turn 
 }
 

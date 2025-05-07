@@ -10,7 +10,7 @@ int main(int argc, char **argv)
             return (1);
         }
         Game init = Game();
-        init.launch_game_player_versus_player();
+        init.launch_game_player_versus_ia(1);
     }
     catch (std::exception &e)
     {

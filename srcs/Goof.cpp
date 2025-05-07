@@ -4,6 +4,7 @@ Goof::Goof(Game initState, int player) : listAction(128)
 {
     this->currentState = initState;
     this->player = player;
+    this->depth = 3;
 }
 
 Goof::~Goof()

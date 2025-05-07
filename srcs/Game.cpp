@@ -91,7 +91,6 @@ void Game::turn(int idx) // Function turn for two player, idx = 0 for player 1 t
         std::cout << "\nChoose an action:\n";
         std::cout << "1: Move a placed piece\n";
         std::cout << "2: Place a stored piece\n";
-
         std::cout << "Your choice: ";
         std::cin >> n;
 

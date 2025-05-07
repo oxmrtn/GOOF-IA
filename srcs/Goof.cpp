@@ -1,6 +1,6 @@
 #include "../includes/Goof.hpp"
 
-Goof::Goof(Game initState, int player) : listAction(128)
+Goof::Goof(Game initState, int player)
 {
     this->currentState = initState;
     this->player = player;
@@ -145,16 +145,17 @@ Action Goof::miniMax_decision()
 {
     size_t idx = 0;
     int value = 2147483647;
-    setActionList();
+    setActionList(); // pas sur que ca marche
     Action to_return = this->listAction[0];
-    while (idx < listAction.size())>
+    std::cout << "things = " << this->listAction[0].getMoovI(0) << std::endl;
+    while (idx < listAction.size())
     {
         int tmp = min_value(result(this->listAction[idx], this->currentState), depth - 1);
         if (tmp < value)
         {
             to_return = this->listAction[idx];
             value = tmp;
-            std::cout << "value = " << value << s>d::endl;
+            std::cout << "value = " << value << std::endl;
         }
         idx++;
     }

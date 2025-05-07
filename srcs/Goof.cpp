@@ -30,7 +30,7 @@ void Goof::setActionList() // Determine every possible moov for a position
         {
             Case tmp = currentState.map[i][j];
             int tmp2 = tmp.getCurrent();
-            if (tmp2 == 0 || (this->player == 0 && tmp2 > 3) || (this->player == 1 && tmp2 < 4))
+            if ((this->player == 0 && tmp2 > 3) || (this->player == 1 && tmp2 < 4))
                 continue;
             if ( tmp2 > 4)
                 tmp2 -= 3;
@@ -39,6 +39,8 @@ void Goof::setActionList() // Determine every possible moov for a position
                 if (available_piece[k] != 0 && available_piece[k] > tmp2)
                     this->actionList.push_back(Action(i, j, available_piece[k]));
             }
+            if (tmp2 == 0)
+                continue ;
             for (int p = 0; p < 3; p++)
             {
                 for (int m = 0; m < 3; m++)
@@ -77,7 +79,7 @@ int Goof::utility(Game state)
 {
     int turn = state.getUp;
     int score = 0;
-    int tmp[2];
+    std::array<int, 2> tmp[2];
     int center;
     
     if(this.player == 1)
@@ -105,7 +107,7 @@ int Goof::utility(Game state)
         
         tmp = state.checker_two_cases();
 
-        if(state.getUp == 0)
+        if(state.getUp() == 0)
         {
             score+=100*tmp[0];
             score-= 50*tmp[1];
@@ -118,12 +120,12 @@ int Goof::utility(Game state)
 
     if(this.player == 2)
     {
-        if(state.check_line==1)
+        if(state.checker()==1)
         {
             return -1000;
         }
 
-        if(state.check_line==2)
+        if(state.checker()==2)
         {
             return 1000;
         }
@@ -136,12 +138,12 @@ int Goof::utility(Game state)
 
         }else if (center == 2)
         {
-            score+=50
+            score+=50;
         }
         
         tmp = state.checker_two_cases()
 
-        if(state.getUp == 0)
+        if(state.getUp() == 0)
         {
             score-=100*tmp[0];
             score+= 50*tmp[1];

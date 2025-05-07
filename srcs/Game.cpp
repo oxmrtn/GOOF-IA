@@ -332,12 +332,12 @@ int Game::getUp()
     return this->up;
 }
 
-bool []Game::check_two_cases(int a, int b, int c) // Check a line for possible 2 pieces in a row
+std::array<bool, 2> Game::check_two_cases(int a, int b, int c) // Check a line for a possible 2 pieces in a row
 {
     int p1 = 0;
     int p2 = 0;
     int values[3] = {a, b, c};
-    bool tab[2] = {0,0};
+    std::array<bool, 2> tab = {false, false};
 
     for (int i = 0; i < 3; i++)
     {
@@ -348,22 +348,22 @@ bool []Game::check_two_cases(int a, int b, int c) // Check a line for possible 2
     }
     if (p1 == 2)
     {
-        tab[0] = 1;
+        tab[0] = true;
     }
     if (p2 == 2)
     {
-        tab[1] = 1;
+        tab[1] = true;
     }
     return tab;
 }
 
-int []Game::checker_two_cases() // Check the board for a potential 2 pieces in a row
+std::array<int, 2> Game::checker_two_cases() // Check the board for potentials 2 pieces in a row
 {   
-    int tab[2] = {0,0};
+    std::array<int, 2> tab[2] = {0,0};
 
     for (int j = 0; j < 3; j++)
     {
-        int tmp = check_two_cases(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent());
+        std::array<bool, 2> tmp = check_two_cases(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent());
         if (tmp[0])
         {
             tab[0] = 1;
@@ -375,7 +375,7 @@ int []Game::checker_two_cases() // Check the board for a potential 2 pieces in a
     }
     for (int i = 0; i < 3; i++)
     {
-        int tmp = check_two_cases(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
+        std::array<int, 2> tmp = check_two_cases(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
         if (tmp[0])
         {
             tab[0] += 1;
@@ -386,7 +386,7 @@ int []Game::checker_two_cases() // Check the board for a potential 2 pieces in a
         }
     }
     {
-        int tmp = check_two_cases(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
+        std::array<int, 2> tmp = check_two_cases(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
         if (tmp[0])
         {
             tab[0] += 1;
@@ -397,7 +397,7 @@ int []Game::checker_two_cases() // Check the board for a potential 2 pieces in a
         }
     }
     {
-        int tmp = check_two_cases(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
+        std::array<int, 2> tmp = check_two_cases(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
         if (tmp[0])
         {
             tab[0] += 1;

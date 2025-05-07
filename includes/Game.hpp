@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <exception>
+#include <array>
 
 #include "./Case.hpp"
 #include "./enum.hpp"
@@ -44,7 +45,7 @@ class Game
         Player getPlayer(int idx);
         friend class Goof;
         int getUp();
-        int []check_two_cases(int a, int b, int c);
-        int []checker_two_cases();
+        std::array<bool, 2> check_two_cases(int a, int b, int c);
+        std::array<int, 2> checker_two_cases();
         int check_center();
 };

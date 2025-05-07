@@ -4,6 +4,7 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include <array>
 
 #include "./Game.hpp"
 #include "./Action.hpp"

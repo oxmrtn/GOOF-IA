@@ -18,4 +18,5 @@ class Player
         bool allowed_moov(int play);
         void play(int play);
         bool moov_left();
+        std::vector<int> getMoov();
 };

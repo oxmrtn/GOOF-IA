@@ -69,3 +69,8 @@ bool Player::moov_left()
     }
     return (false);
 }
+
+std::vector<int> Player::getMoov()
+{
+    return this->moov;
+}

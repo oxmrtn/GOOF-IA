@@ -70,7 +70,13 @@ bool Player::moov_left()
     return (false);
 }
 
-std::vector<int> Player::getMoov()
+int piece_left()
 {
-    return this->moov;
+    int result = 0;
+    for (size_t i = 0; i < moov.size(); i++)
+    {
+        if (moov[i] != 0)
+            result++;
+    }
+    return (result);
 }

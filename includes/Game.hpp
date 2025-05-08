@@ -47,7 +47,8 @@ class Game
         int check_line(int a, int b, int c);
         bool execute_moov(int i, int j, int value);
         void turn(int idx);
-        Player getPlayer(int idx);
+        Player & getPlayer(int idx);
+        void PlayerPlay(int idx, int play);
         int getUp();
         void setUp(int value);
         std::array<bool, 2> check_two_cases(int a, int b, int c);

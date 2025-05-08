@@ -416,12 +416,18 @@ bool Game::execute_moov(int i, int j, int value) // Tries to place a piece in at
     }
 }
 
-Player Game::getPlayer(int idx)
+Player & Game::getPlayer(int idx)
 {
     if (idx != 0 && idx != 1)
         throw std::out_of_range("error: Player index out of range");
     return (player[idx]);
 }
+
+void Game::PlayerPlay(int idx, int play)
+{
+    this->player[idx].play(play);
+}
+
 int Game::getUp()
 {
     return this->up;

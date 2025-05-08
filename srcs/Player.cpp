@@ -70,7 +70,7 @@ bool Player::moov_left()
     return (false);
 }
 
-int piece_left()
+int Player::piece_left()
 {
     int result = 0;
     for (size_t i = 0; i < moov.size(); i++)

@@ -4,7 +4,7 @@ Goof::Goof(Game initState, int player)
 {
     this->currentState = initState;
     this->player = player;
-    this->depth = 6;
+    this->depth = 5;
 }
 
 Goof::~Goof()
@@ -158,120 +158,51 @@ int Goof::utility2(Game state)
     Player p1 = state.getPlayer(0);
     Player p2 = state.getPlayer(1);
     int mult = (state.getUp() == 0) ? 1 : -1;
-    
+    if (state.checker() == 1)
+        return (1000 * mult);
+    if (state.checker() == 2)
+        return (-1000 * mult);
+    center = state.check_center();
+    if(center == 1)
+        score += 50 * mult;
+    else if (center == 2)
+        score -= 50 * mult;
+    tmp = state.checker_two_cases();
     if (state.getUp() == 0)
     {
-        if(state.checker() == 1)
-            return (state.display_raw() , 1000);
-        if(state.checker() == 2)
-            return (state.display_raw() ,-1000);
-        center = state.check_center();
-        if(center == 1)
-            score += 50;
-        else if (center == 2)
-            score -= 50;
-        tmp = state.checker_two_cases();
-        if (state.getUp() == 0)
-        {
-            score += 100 * tmp[0]; 
-            score -= 50 * tmp[1];
-        }
-        else
-        {
-            score -=100 * tmp[1];
-            score += 50 * tmp[0];
-        }
-
-        for(int i = 0; i<3; i++)
-        {
-            for(int j = 0; j<3; j++)
-            {
-                switch(state.map[i][j].getCurrent())
-                {
-                    case P1_SMALL: score += 10;
-                    break;
-                    case P1_MEDIUM: score += 20;
-                    break;
-                    case P1_BIG: score += 30;
-                    break;
-                    case P2_SMALL: score -= 10;
-                    break;
-                    case P2_MEDIUM: score -= 20;
-                    break;
-                    case P2_BIG: score -= 30;
-                    break;
-                    default:
-                    break;
-                }
-            }
-        }
-        
-        for(size_t i = 0; i < p1.getMoov().size(); i++)
-        {
-            score+=5;
-        }
-        for(size_t i = 0; i < p2.getMoov().size(); i++)
-        {
-            score-=5;
-        }
-
+        score += (100 * tmp[0]) * mult; 
+        score -= (50 * tmp[1]) * mult;
     }
-    if (state.getUp() == 1)
+    else
     {
-        if (state.checker() == 1)
-            return (state.display_raw() ,-1000);
-        if (state.checker() == 2)
-            return (state.display_raw() , 1000);
-        center = state.check_center();
-        if (center == 1)
-            score -= 50;
-        else if (center == 2)
-            score += 50;
-        tmp = state.checker_two_cases();
-        if (state.getUp() == 0)
+        score -= (100 * tmp[1]) * mult;
+        score += (50 * tmp[0]) * mult;
+    }
+    for(int i = 0; i<3; i++)
+    {
+        for(int j = 0; j<3; j++)
         {
-            score -= 100*tmp[0];
-            score += 50*tmp[1];
-        }
-        else
-        {
-            score += 100 * tmp[1];
-            score -= 50 * tmp[0];
-        }
-        for (int i = 0; i<3; i++)
-        {
-            for(int j = 0; j<3; j++)
+            switch(state.map[i][j].getCurrent())
             {
-                switch(state.map[i][j].getCurrent())
-                {
-                    case P1_SMALL: score -= 10;
-                    break;
-                    case P1_MEDIUM: score -= 20;
-                    break;
-                    case P1_BIG: score -= 30;
-                    break;
-                    case P2_SMALL: score += 10;
-                    break;
-                    case P2_MEDIUM: score += 20;
-                    break;
-                    case P2_BIG: score += 30;
-                    break;
-                    default:
-                    break;
-                }
+                case P1_SMALL: score -= 10 * mult;
+                break;
+                case P1_MEDIUM: score -= 20 * mult;
+                break;
+                case P1_BIG: score -= 30 * mult;
+                break;
+                case P2_SMALL: score += 10 * mult;
+                break;
+                case P2_MEDIUM: score += 20 * mult;
+                break;
+                case P2_BIG: score += 30 * mult;
+                break;
+                default:
+                break;
             }
         }
-
-        for(size_t i = 0; i < p1.getMoov().size(); i++)
-        {
-            score-=5;
-        }
-        for(size_t i = 0; i < p2.getMoov().size(); i++)
-        {
-            score+=5;
-        }
-
     }
+        score += (p1.piece_left() * 5) * mult;
+        score -= (p2.piece_left() * 5) * mult;
     return (score);
 }
 
@@ -350,10 +281,10 @@ Action Goof::miniMax_decision()
         {
             std::cout << " Action type = " << listAction[idx].getType() << " from  {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " move to " << " {" << listAction[idx].getMoovI(2) << ";" << listAction[idx].getMoovI(3) << "}"<< listAction[idx].getMoovI(4) <<" utility score = " << tmpp2 << std::endl;
         }
-        std::cout << "TMP = " << tmp << "  \\ idx = " << idx << std::endl;
+        std::cout << " tmp = " << tmp << " value = " << value << " tmp > value = " << (tmp > value) << std::endl;
         if (tmp > value)
         {
-            std::cout << "MAX UPDATED = " << tmp << std::endl; 
+            std::cout << "hit" << std::endl;
             to_return = this->listAction[idx];
             value = tmp;
         }
@@ -403,18 +334,28 @@ Action Goof::miniMax_decision_ab()
     size_t idx = 0;
     int value = -2147483648;
     setActionList();
-    Action to_return = this->listAction[0];
+    Action to_return ;
     while (idx < listAction.size())
     {
         int tmp = min_value_ab(result(this->listAction[idx], this->currentState), this->depth - 1, -2147483648, 2147483647);
-
+        int tmpp2 = utility2(result(this->listAction[idx], this->currentState));
+        if (listAction[idx].getType() == "stored")
+            std::cout << " Action type = " << listAction[idx].getType() << " {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " piece " << listAction[idx].getMoovI(2) << " utility score = " << tmpp2 << std::endl;
+        else
+        {
+            std::cout << " Action type = " << listAction[idx].getType() << " from  {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " move to " << " {" << listAction[idx].getMoovI(2) << ";" << listAction[idx].getMoovI(3) << "}"<< listAction[idx].getMoovI(4) <<" utility score = " << tmpp2 << std::endl;
+        }
+        std::cout << " tmp = " << tmp << " value = " << value << " tmp > value = " << (tmp > value) << std::endl;
         if (tmp > value)
         {
             to_return = this->listAction[idx];
             value = tmp;
+            std::cout << "hit" << std::endl;
         }
         idx++;
     }
+    std::cout << "end of miniMAX, value = " << value << std::endl;
+    std::cout << "moov = {" << to_return.getMoovI(0) << ", " << to_return.getMoovI(1) << "} piece = " << to_return.getMoovI(2) << std::endl;
     return (to_return);
 }
 
@@ -423,7 +364,7 @@ int Goof::max_value_ab(Game state, int depthh, int alpha, int beta)
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
-    if (depthh <= 0 || actionList.empty() || state.checker())
+    if (depthh <= 0 || actionList.empty())
         return ( utility2(state));
     int v = -2147483648;
     size_t idx = 0;
@@ -442,7 +383,7 @@ int Goof::min_value_ab(Game state, int depthh, int alpha, int beta)
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
-    if (depthh <= 0 || actionList.empty() || state.checker())
+    if (depthh <= 0 || actionList.empty())
     {
         return ( utility2(state));
     }

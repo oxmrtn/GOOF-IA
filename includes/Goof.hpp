@@ -27,7 +27,10 @@ class Goof
         void setActionList();
         void fill_action_list(std::vector<Action> &vector, Game state);
         Action miniMax_decision();
+        Action miniMax_decision_ab();
+        int min_value_ab(Game state, int depthh, int alpha, int beta);
         int min_value(Game state, int depthh);
+        int max_value_ab(Game state, int depthh, int alpha, int beta);
         int max_value(Game state, int depthh);
         Game result(Action a, const Game & state);
         int utility(Game state);

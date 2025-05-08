@@ -42,12 +42,14 @@ class Game
         void launch_game_player_versus_player();
         void launch_game_player_versus_ia(int bot_player);
         void display_game();
+        void display_raw();
         int checker();
         int check_line(int a, int b, int c);
         bool execute_moov(int i, int j, int value);
         void turn(int idx);
         Player getPlayer(int idx);
         int getUp();
+        void setUp(int value);
         std::array<bool, 2> check_two_cases(int a, int b, int c);
         std::array<int, 2> checker_two_cases();
         int check_center();

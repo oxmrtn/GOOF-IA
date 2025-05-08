@@ -286,7 +286,7 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
             {
                 std::cout << CYAN << "PLAYER 1 MOOV" << DEFAULT << std::endl << std::endl;
                 Goof goof_ia = Goof(*this, bot_player);
-                Action action = goof_ia.miniMax_decision();
+                Action action = goof_ia.miniMax_decision_ab();
 
                 if(action.getType() == "stored")
                 {
@@ -310,15 +310,15 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
         {    
             if (this->up == 0)
             {   
-                std::cout << MAGENTA << "PLAYER 1 MOOV" << DEFAULT << std::endl << std::endl;
+                std::cout << CYAN << "PLAYER 1 MOOV" << DEFAULT << std::endl << std::endl;
                 turn(this->up);
             }
             else
             {
-                std::cout << CYAN << "PLAYER 2 MOOV" << DEFAULT << std::endl << std::endl;
+                std::cout << MAGENTA << "PLAYER 2 MOOV" << DEFAULT << std::endl << std::endl;
                 Goof goof_ia = Goof(*this, bot_player);
 
-                Action action = goof_ia.miniMax_decision();
+                Action action = goof_ia.miniMax_decision_ab();
 
                 if(action.getType() == "stored")
                 {
@@ -338,7 +338,6 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
                 }
             }
         }
-
         if (this->up == 0)
             this->up = 1;
         else
@@ -358,6 +357,7 @@ int Game::check_line(int a, int b, int c) // Check a line for possible alignemen
     int p2 = 0;
     int values[3] = {a, b, c};
 
+    //std::cout << " a = " << a << " b = " << " c = " << c << std::endl;
     for (int i = 0; i < 3; i++)
     {
         if (DET_PLAYER(values[i]) == 1) // DET_PLAYER is a macro expent in Game.hpp
@@ -509,9 +509,28 @@ int Game::check_center() // Check the state of the center case, return 0 if no p
 {
     if (DET_PLAYER(map[1][1].getCurrent()) == 1)
         return 1;
-    
     if (DET_PLAYER(map[1][1].getCurrent()) == 2)
-        return 2;
-    
+        return 2;    
     return 0;
 }
+
+
+void Game::setUp(int value)
+{
+    this->up = value;
+}
+
+void Game::display_raw()
+{
+    std::cout << "----------------------" << std::endl;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            std::cout << " " << this->map[i][j].getCurrent();
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "----------------------" << std::endl;
+}
+

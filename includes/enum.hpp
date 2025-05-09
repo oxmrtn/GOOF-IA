@@ -6,7 +6,9 @@ enum moov
     P1_SMALL, // 1
     P1_MEDIUM, // 2
     P1_BIG, // 3
-    P2_SMALL, // 4
-    P2_MEDIUM, // 5
-    P2_BIG // 6
+    P1_BBIG, // 4
+    P2_SMALL, // 5
+    P2_MEDIUM, // 6
+    P2_BIG, // 7
+    P2_BBIG // 8
 };

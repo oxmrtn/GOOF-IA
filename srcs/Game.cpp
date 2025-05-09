@@ -2,11 +2,12 @@
 
 Game::Game()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < SIZE; j++)
         {
             map[i][j] = Case();
+            std::cout << "DEBUG case = " << map[i][j].getCurrent() << std::endl;
         }
     }
     player[0] = Player();
@@ -18,9 +19,9 @@ Game& Game::operator=(const Game& other)
 {
     if (this != &other)
     {
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < SIZE; ++i)
         {
-            for (int j = 0; j < 3; ++j)
+            for (int j = 0; j < SIZE; ++j)
             {
                 this->map[i][j] = other.map[i][j];
             }
@@ -35,9 +36,9 @@ Game& Game::operator=(const Game& other)
 
 Game::Game(const Game& other)
 {
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < SIZE; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (int j = 0; j < SIZE; ++j)
         {
             this->map[i][j] = other.map[i][j];
         }
@@ -51,21 +52,21 @@ Game::Game(const Game& other)
 void Game::display_game() // Human readable display of the board
 {
     std::cout << std::endl;
-    std::cout << YELLOW << "    0   1   2 " << DEFAULT << std::endl;
-    for (int i = 0; i < 3; i++)
+    std::cout << YELLOW << "    0   1   2   3" << DEFAULT << std::endl;
+    for (int i = 0; i < SIZE; i++)
     {
         int tmp;
-        std::cout << YELLOW << "   --- --- ---" << DEFAULT << std::endl;
-        for (int j = 0; j < 3; j++)
+        std::cout << YELLOW << "   --- --- --- ---" << DEFAULT << std::endl;
+        for (int j = 0; j < SIZE; j++)
         {
             if (j == 0)
                 std::cout << YELLOW <<  i << DEFAULT << " | ";
             else
                 std::cout << YELLOW << " | " << DEFAULT;
             tmp = map[i][j].getCurrent();
-            if (tmp == P2_SMALL || tmp == P2_MEDIUM || tmp == P2_BIG)
-                std::cout << MAGENTA << tmp - 3 << DEFAULT;
-            else if (tmp == P1_SMALL || tmp == P1_MEDIUM || tmp == P1_BIG)
+            if (tmp == P2_SMALL || tmp == P2_MEDIUM || tmp == P2_BIG || tmp == P2_BBIG)
+                std::cout << MAGENTA << tmp - 4 << DEFAULT;
+            else if (tmp == P1_SMALL || tmp == P1_MEDIUM || tmp == P1_BIG || tmp == P1_BBIG)
                 std::cout << CYAN << tmp << DEFAULT;
             else
                 std::cout << tmp;
@@ -73,7 +74,7 @@ void Game::display_game() // Human readable display of the board
         std::cout << YELLOW << " | " << DEFAULT;
         std::cout << std::endl;
     }
-    std::cout << YELLOW << "   --- --- ---" << DEFAULT << std::endl;
+    std::cout << YELLOW << "   --- --- --- ---" << DEFAULT << std::endl;
     std::cout << std::endl;
 }
 
@@ -351,25 +352,25 @@ void Game::launch_game_player_versus_ia(int bot_player) // Main loop for player 
 }
 
 
-int Game::check_line(int a, int b, int c) // Check a line for possible alignement
+int Game::check_line(int a, int b, int c, int d) // Check a line for possible alignement
 {
     int p1 = 0;
     int p2 = 0;
-    int values[3] = {a, b, c};
+    int values[4] = {a, b, c, d};
 
     //std::cout << " a = " << a << " b = " << " c = " << c << std::endl;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
         if (DET_PLAYER(values[i]) == 1) // DET_PLAYER is a macro expent in Game.hpp
             p1++;
         if (DET_PLAYER(values[i]) == 2)
             p2++;
     }
-    if (p1 == 3)
+    if (p1 == 4)
     {
         return (1);
     }
-    if (p2 == 3)
+    if (p2 == 4)
     {
         return (2);
     }
@@ -378,25 +379,25 @@ int Game::check_line(int a, int b, int c) // Check a line for possible alignemen
 
 int Game::checker() // Check the board for a potential victory
 {
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < SIZE; j++)
     {
-        int tmp = check_line(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent());
+        int tmp = check_line(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent(), map[3][j].getCurrent());
         if (tmp)
             return (tmp);
     }
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        int tmp = check_line(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
-        if (tmp)
-            return (tmp);
-    }
-    {
-        int tmp = check_line(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
+        int tmp = check_line(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent(),map[i][3].getCurrent() );
         if (tmp)
             return (tmp);
     }
     {
-        int tmp = check_line(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
+        int tmp = check_line(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent(), map[3][3].getCurrent());
+        if (tmp)
+            return (tmp);
+    }
+    {
+        int tmp = check_line(map[0][3].getCurrent(), map[1][2].getCurrent(), map[2][1].getCurrent(), map[3][0].getCurrent());
         if (tmp)
             return (tmp);
     }

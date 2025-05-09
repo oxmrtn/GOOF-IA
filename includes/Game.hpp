@@ -25,6 +25,9 @@
 #define WHITE       "\033[37m"
 #define DEFAULT     "\033[0m"
 
+#define SIZE 4
+#define NBR_PIECE 4
+
 class Goof;
 
 class Game
@@ -44,7 +47,7 @@ class Game
         void display_game();
         void display_raw();
         int checker();
-        int check_line(int a, int b, int c);
+        int check_line(int a, int b, int c, int d);
         bool execute_moov(int i, int j, int value);
         void turn(int idx);
         Player & getPlayer(int idx);

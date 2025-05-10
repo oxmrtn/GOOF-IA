@@ -63,6 +63,7 @@
         "format": "cpp",
         "numbers": "cpp",
         "span": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "__split_buffer": "cpp"
     }
 }

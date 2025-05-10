@@ -19,20 +19,19 @@ class Goof
         std::vector<Action> listAction;
         int depth;
         int player;
+        int (Goof::*utilityFunction)(Game state);
     
     public:
-        Goof(Game initState, int player);
+        Goof(Game initState, int player, int difficulty);
         ~Goof();
         void updateState(Game state);
         void setActionList();
         void fill_action_list(std::vector<Action> &vector, Game state);
-        Action miniMax_decision();
         Action miniMax_decision_ab();
         int min_value_ab(Game state, int depthh, int alpha, int beta);
-        int min_value(Game state, int depthh);
         int max_value_ab(Game state, int depthh, int alpha, int beta);
-        int max_value(Game state, int depthh);
         Game result(Action a, const Game & state);
-        int utility(Game state);
-        int utility2(Game state);
+        int utility_easy(Game state);
+        int utility_medium(Game state);
+        int utility_hard(Game state);
 };

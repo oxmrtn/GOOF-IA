@@ -2,7 +2,7 @@
 
 Case::Case()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         tab[i] = 0;
     }
@@ -11,7 +11,7 @@ Case::Case()
 
 Case::Case(const Case & other)
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; i++)
     {
         this->tab[i] = other.tab[i];
     }
@@ -20,9 +20,9 @@ Case::Case(const Case & other)
 
 Case& Case::operator=(const Case& other)
 {
-    if (this != &other) // auto-affectation
+    if (this != &other)
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; i++)
         {
             this->tab[i] = other.tab[i];
         }
@@ -60,7 +60,7 @@ void Case::undo_move() // Withdraw a value from a case
 
 bool Case::space_on_case() // True if the case is empty
 {
-    return (this->latest >= 3 ? false : true);
+    return (this->latest >= 4 ? false : true);
 }
 
 bool Case::is_allowed( int value ) // True if a moov is allowed, false otherwise
@@ -78,6 +78,11 @@ bool Case::is_allowed( int value ) // True if a moov is allowed, false otherwise
     {
         if ((this->getCurrent() == P1_MEDIUM || this->getCurrent() == P2_MEDIUM)
             || (this->getCurrent() == P1_SMALL || this->getCurrent() == P2_SMALL))
+            return (true);
+    }
+    else if ( value == P2_BBIG || value == P1_BBIG)
+    {
+        if ((!(this->getCurrent() == P1_BBIG) && !(this->getCurrent() == P2_BBIG)))
             return (true);
     }
     return (false);

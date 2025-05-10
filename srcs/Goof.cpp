@@ -1,10 +1,22 @@
 #include "../includes/Goof.hpp"
 
-Goof::Goof(Game initState, int player)
+Goof::Goof(Game initState, int player, int difficulty)
 {
     this->currentState = initState;
     this->player = player;
-    this->depth = 5;
+    this->depth = 3;
+    if (difficulty == 0)
+        this->utilityFunction = &Goof::utility_easy;
+    else if (difficulty == 1)
+        this->utilityFunction = &Goof::utility_medium;
+    else if (difficulty == 2)
+    {
+        this->utilityFunction = &Goof::utility_hard;
+        this->depth = 3;
+    }
+    else
+        this->utilityFunction = &Goof::utility_easy;
+
 }
 
 Goof::~Goof()
@@ -19,22 +31,22 @@ void Goof::setActionList() // Determine every possible moov for a position
 {
     this->listAction.clear();
     Player a_p = this->currentState.getPlayer(currentState.getUp());
-    int available_piece[4] = {0, 0, 0, 0};
-    for (int i = 0; i < 4; i++)
+    int available_piece[5] = {0, 0, 0, 0, 0};
+    for (int i = 0; i < 5; i++)
     {
         if (a_p.allowed_moov(i))
             available_piece[i] = i;
     }
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < SIZE; j++)
         {
             Case tmp = currentState.map[i][j];
             int tmp2 = tmp.getCurrent();
             int tmp3 = tmp2;
             if ( tmp2 > 4)
-                tmp3 = tmp2 - 3;
-            for (int k = 0; k < 4; k++)
+                tmp3 = tmp2 - 4;
+            for (int k = 0; k < 5; k++)
             {
            //   std::cout << "here" << std::endl
                 if (available_piece[k] != 0 && available_piece[k] > tmp3)
@@ -43,19 +55,67 @@ void Goof::setActionList() // Determine every possible moov for a position
                //   std::cout << "[DEBUG] Added stored action (" << i << ", " << j << ", " << available_piece[k] << ")" << std::endl;
                 }
             }
-            if ((this->player == 0 && tmp2 > 3) || (this->player == 1 && tmp2 < 4))
+            if ((this->player == 0 && tmp2 > 4) || (this->player == 1 && tmp2 < 5))
                 continue;
             if (tmp2 == 0)
                 continue ;
-            if ( tmp2 > 4)
-                tmp2 -= 3;
-            for (int p = 0; p < 3; p++)
+            if ( tmp2 > 5)
+                tmp2 -= 4;
+            for (int p = 0; p < SIZE; p++)
             {
-                for (int m = 0; m < 3; m++)
+                for (int m = 0; m < SIZE; m++)
                 {
                     if (tmp2 > currentState.map[p][m].getCurrent())
                     {
                         this->listAction.push_back(Action(i, j, p, m, tmp2));
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Goof::fill_action_list(std::vector<Action> &vector, Game state)
+{
+    vector.clear();
+    Player a_p = state.getPlayer(state.getUp());
+    int available_piece[5] = {0, 0, 0, 0, 0};
+    for (int i = 0; i < 5; i++)
+    {
+        if (a_p.allowed_moov(i))
+            available_piece[i] = i;
+    }
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            Case tmp = state.map[i][j];
+            int tmp2 = tmp.getCurrent();
+            int tmp3 = tmp2;
+            if ( tmp2 > 4)
+                tmp3 = tmp2 - 4;
+            for (int k = 0; k < 5; k++)
+            {
+           //   std::cout << "here" << std::endl
+                if (available_piece[k] != 0 && available_piece[k] > tmp3)
+                {
+                    vector.push_back(Action(i, j, available_piece[k]));
+               //   std::cout << "[DEBUG] Added stored action (" << i << ", " << j << ", " << available_piece[k] << ")" << std::endl;
+                }
+            }
+            if ((state.getUp() == 0 && tmp2 > 4) || (state.getUp() == 1 && tmp2 < 5))
+                continue;
+            if (tmp2 == 0)
+                continue ;
+            if ( tmp2 > 5)
+                tmp2 -= 4;
+            for (int p = 0; p < SIZE; p++)
+            {
+                for (int m = 0; m < SIZE; m++)
+                {
+                    if (tmp2 > state.map[p][m].getCurrent())
+                    {
+                        vector.push_back(Action(i, j, p, m, tmp2));
                     }
                 }
             }
@@ -71,7 +131,7 @@ Game Goof::result(Action a, const Game & state)
         int tmp = a.getMoovI(2);
         to_return.player[to_return.getUp()].play(tmp);
         if (to_return.getUp() == 1)
-            to_return.execute_moov(a.getMoovI(0), a.getMoovI(1), tmp + 3);
+            to_return.execute_moov(a.getMoovI(0), a.getMoovI(1), tmp + 4);
         else
             to_return.execute_moov(a.getMoovI(0), a.getMoovI(1), tmp);
         if (to_return.getUp() == 1)
@@ -95,117 +155,6 @@ Game Goof::result(Action a, const Game & state)
 }
 
 
-int Goof::utility(Game state)
-{
-    int score = 0;
-    std::array<int, 2> tmp;
-    int center;
-    
-    if (this->player == 0)
-    {
-        if(state.checker()==1)
-            return (1000);
-        if(state.checker()==2)
-            return (-1000);
-        center = state.check_center();
-        if(center == 1)
-            score += 50;
-        else if (center == 2)
-            score -= 50;
-        tmp = state.checker_two_cases();
-        if (state.getUp() == 0)
-        {
-            score += 100 * tmp[0]; 
-            score -= 50 * tmp[1];
-        }
-        else
-        {
-            score -=100 * tmp[1];
-            score += 50 * tmp[0];
-        }
-    }
-    if (this->player == 1)
-    {
-        if (state.checker() == 1)
-            return (-1000);
-        if (state.checker() == 2)
-            return (1000);
-        center = state.check_center();
-        if (center == 1)
-            score -= 50;
-        else if (center == 2)
-            score += 50;
-        tmp = state.checker_two_cases();
-        if (state.getUp() == 0)
-        {
-            score -= 100*tmp[0];
-            score += 50*tmp[1];
-        }
-        else
-        {
-            score += 100*tmp[1];
-            score -= 50*tmp[0];
-        }
-    }
-    return (score);
-}
-
-int Goof::utility2(Game state)
-{
-    int score = 0;
-    std::array<int, 2> tmp;
-    int center;
-    Player p1 = state.getPlayer(0);
-    Player p2 = state.getPlayer(1);
-    int mult = (state.getUp() == 0) ? 1 : -1;
-    if (state.checker() == 1)
-        return (1000 * mult);
-    if (state.checker() == 2)
-        return (-1000 * mult);
-    center = state.check_center();
-    if(center == 1)
-        score += 50 * mult;
-    else if (center == 2)
-        score -= 50 * mult;
-    tmp = state.checker_two_cases();
-    if (state.getUp() == 0)
-    {
-        score += (100 * tmp[0]) * mult; 
-        score -= (50 * tmp[1]) * mult;
-    }
-    else
-    {
-        score -= (100 * tmp[1]) * mult;
-        score += (50 * tmp[0]) * mult;
-    }
-    for(int i = 0; i<3; i++)
-    {
-        for(int j = 0; j<3; j++)
-        {
-            switch(state.map[i][j].getCurrent())
-            {
-                case P1_SMALL: score -= 10 * mult;
-                break;
-                case P1_MEDIUM: score -= 20 * mult;
-                break;
-                case P1_BIG: score -= 30 * mult;
-                break;
-                case P2_SMALL: score += 10 * mult;
-                break;
-                case P2_MEDIUM: score += 20 * mult;
-                break;
-                case P2_BIG: score += 30 * mult;
-                break;
-                default:
-                break;
-            }
-        }
-    }
-        score += (p1.piece_left() * 5) * mult;
-        score -= (p2.piece_left() * 5) * mult;
-    return (score);
-}
-
 int min(int a, int b)
 {
     return (a < b ? a : b);
@@ -214,119 +163,6 @@ int min(int a, int b)
 int max(int a, int b)
 {
     return (a > b ? a : b);
-}
-
-void Goof::fill_action_list(std::vector<Action> &vector, Game state)
-{
-    vector.clear();
-    Player a_p = state.getPlayer(state.getUp());
-    int available_piece[4] = {0, 0, 0, 0};
-    for (int i = 0; i < 4; i++)
-    {
-        if (a_p.allowed_moov(i))
-            available_piece[i] = i;
-    }
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            Case tmp = state.map[i][j];
-            int tmp2 = tmp.getCurrent();
-            int tmp3 = tmp2;
-            if ( tmp2 > 4)
-                tmp3 = tmp2 - 3;
-            for (int k = 0; k < 4; k++)
-            {
-           //   std::cout << "here" << std::endl
-                if (available_piece[k] != 0 && available_piece[k] > tmp3)
-                {
-                    vector.push_back(Action(i, j, available_piece[k]));
-               //   std::cout << "[DEBUG] Added stored action (" << i << ", " << j << ", " << available_piece[k] << ")" << std::endl;
-                }
-            }
-            if ((state.getUp() == 0 && tmp2 > 3) || (state.getUp() == 1 && tmp2 < 4))
-                continue;
-            if (tmp2 == 0)
-                continue ;
-            if ( tmp2 > 4)
-                tmp2 -= 3;
-            for (int p = 0; p < 3; p++)
-            {
-                for (int m = 0; m < 3; m++)
-                {
-                    if (tmp2 > state.map[p][m].getCurrent())
-                    {
-                        vector.push_back(Action(i, j, p, m, tmp2));
-                    }
-                }
-            }
-        }
-    }
-}
-
-Action Goof::miniMax_decision()
-{
-    size_t idx = 0;
-    int value = -2147483648;
-    setActionList(); // pas sur que ca marche
-    Action to_return = this->listAction[0];
-  //std::cout << "things = " << this->listAction[0].getMoovI(0) << std::endl;
-    while (idx < listAction.size())
-    {
-        int tmp = min_value(result(this->listAction[idx], this->currentState), this->depth - 1);
-        int tmpp2 = utility2(result(this->listAction[idx], this->currentState));
-        if (listAction[idx].getType() == "stored")
-            std::cout << " Action type = " << listAction[idx].getType() << " {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " piece " << listAction[idx].getMoovI(2) << " utility score = " << tmpp2 <<   std::endl;
-        else
-        {
-            std::cout << " Action type = " << listAction[idx].getType() << " from  {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " move to " << " {" << listAction[idx].getMoovI(2) << ";" << listAction[idx].getMoovI(3) << "}"<< listAction[idx].getMoovI(4) <<" utility score = " << tmpp2 << std::endl;
-        }
-        std::cout << " tmp = " << tmp << " value = " << value << " tmp > value = " << (tmp > value) << std::endl;
-        if (tmp > value)
-        {
-            std::cout << "hit" << std::endl;
-            to_return = this->listAction[idx];
-            value = tmp;
-        }
-        idx++;
-    }
-  std::cout << "end of miniMAX, value = " << value << std::endl;
-  std::cout << "moov = {" << to_return.getMoovI(0) << ", " << to_return.getMoovI(1) << "} piece = " << to_return.getMoovI(2) << std::endl;
-    return (to_return);
-}
-
-int Goof::max_value(Game state, int depthh)
-{
-    std::vector<Action> actionList;
-    fill_action_list(actionList, state);
-    if (depthh <= 0 || actionList.empty() || state.checker())
-        return ( utility2(state));
-    int v = -2147483648;
-    size_t idx = 0;
-    while (idx < actionList.size())
-    {
-        v = max(v, Goof::min_value(result(actionList[idx], state), depthh - 1));
-        idx++;
-    }
-    return (v);
-}
-
-int Goof::min_value(Game state, int depthh)
-{
-    std::vector<Action> actionList;
-    fill_action_list(actionList, state);
-    if (depthh <= 0 || actionList.empty() || state.checker())
-    {
-        return ( utility2(state));
-    }
-    int v = 2147483647;
-    size_t idx = 0;
-    while (idx < actionList.size())
-    {
-        v = min(v, Goof::max_value(result(actionList[idx], state), depthh - 1));
-        idx++;
-    }
-    return (v);
 }
 
 Action Goof::miniMax_decision_ab()
@@ -338,14 +174,14 @@ Action Goof::miniMax_decision_ab()
     while (idx < listAction.size())
     {
         int tmp = min_value_ab(result(this->listAction[idx], this->currentState), this->depth - 1, -2147483648, 2147483647);
-        int tmpp2 = utility2(result(this->listAction[idx], this->currentState));
-        if (listAction[idx].getType() == "stored")
-            std::cout << " Action type = " << listAction[idx].getType() << " {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " piece " << listAction[idx].getMoovI(2) << " utility score = " << tmpp2 << std::endl;
-        else
-        {
-            std::cout << " Action type = " << listAction[idx].getType() << " from  {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " move to " << " {" << listAction[idx].getMoovI(2) << ";" << listAction[idx].getMoovI(3) << "}"<< listAction[idx].getMoovI(4) <<" utility score = " << tmpp2 << std::endl;
-        }
-        std::cout << " tmp = " << tmp << " value = " << value << " tmp > value = " << (tmp > value) << std::endl;
+        //int tmpp2 = utility2(result(this->listAction[idx], this->currentState));
+        // if (listAction[idx].getType() == "stored")
+        //     std::cout << " Action type = " << listAction[idx].getType() << " {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " piece " << listAction[idx].getMoovI(2) << " utility score = " << tmpp2 << std::endl;
+        // else
+        // {
+        //     std::cout << " Action type = " << listAction[idx].getType() << " from  {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " move to " << " {" << listAction[idx].getMoovI(2) << ";" << listAction[idx].getMoovI(3) << "}"<< listAction[idx].getMoovI(4) <<" utility score = " << tmpp2 << std::endl;
+        // }
+        // std::cout << " tmp = " << tmp << " value = " << value << " tmp > value = " << (tmp > value) << std::endl;
         if (tmp > value)
         {
             to_return = this->listAction[idx];
@@ -364,8 +200,12 @@ int Goof::max_value_ab(Game state, int depthh, int alpha, int beta)
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
-    if (depthh <= 0 || actionList.empty())
-        return ( utility2(state));
+    if (depthh <= 0 || actionList.empty() || state.checker())
+    {
+        if (state.checker())
+            state.display_game();
+        return ( (this->*utilityFunction)(state) );
+    }
     int v = -2147483648;
     size_t idx = 0;
     while (idx < actionList.size())
@@ -383,9 +223,11 @@ int Goof::min_value_ab(Game state, int depthh, int alpha, int beta)
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
-    if (depthh <= 0 || actionList.empty())
+    if (depthh <= 0 || actionList.empty() || state.checker())
     {
-        return ( utility2(state));
+        if (state.checker())
+            state.display_game();
+        return ((this->*utilityFunction)(state) );
     }
     int v = 2147483647;
     size_t idx = 0;

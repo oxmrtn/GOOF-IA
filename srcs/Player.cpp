@@ -1,6 +1,6 @@
 #include "../includes/Player.hpp"
 
-Player::Player() : moov{1, 1, 2, 2, 3, 3}
+Player::Player() : moov{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4}
 {}
 
 Player::Player(const Player & other)
@@ -23,7 +23,8 @@ Player::~Player()
 
 void Player::display_moov() // Display all the available moov
 {
-    for (int i = 0; i < 6; i++)
+    size_t size = moov.size();
+    for (size_t i = 0; i < size ; i++)
     {
         if (moov[i] != 0)
         {
@@ -35,9 +36,10 @@ void Player::display_moov() // Display all the available moov
 
 bool Player::allowed_moov(int play) // Check if a player has the right to play a moov
 {
-    if (play < 0 || play > 3)
+    if (play < 0 || play > 4)
         return (false);
-    for (int i = 0; i < 6; i++)
+    size_t size = moov.size();
+    for (size_t i = 0; i < size; i++)
     {
         if (moov[i] == play)
             return (true);
@@ -47,7 +49,8 @@ bool Player::allowed_moov(int play) // Check if a player has the right to play a
 
 void Player::play(int play) // Withdraw a piece from the available piece
 {
-    for (int i = 0; i < 6; i++)
+    size_t size = moov.size();
+    for (size_t i = 0; i < size; i++)
     {
         if (moov[i] == play)
         {
@@ -60,7 +63,8 @@ void Player::play(int play) // Withdraw a piece from the available piece
 
 bool Player::moov_left()
 {
-    for (int i = 0; i < 6; i++)
+    size_t size = moov.size();
+    for (size_t i = 0; i < size; i++)
     {
         if (moov[i] != 0)
         {
@@ -73,10 +77,22 @@ bool Player::moov_left()
 int Player::piece_left()
 {
     int result = 0;
-    for (size_t i = 0; i < moov.size(); i++)
+    size_t size = moov.size();
+    for (size_t i = 0; i < size; i++)
     {
         if (moov[i] != 0)
             result++;
     }
     return (result);
+}
+
+int Player::score_count()
+{
+    int score = 0;
+    size_t size = moov.size();
+    for (size_t i = 0; i < size; i++)
+    {
+        score += moov[i];
+    }
+    return (score);
 }

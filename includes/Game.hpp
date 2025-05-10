@@ -11,8 +11,8 @@
 #include "./Player.hpp"
 
 #define DET_PLAYER(x) \
-    ((x) == P1_SMALL || (x) == P1_MEDIUM || (x) == P1_BIG ? 1 : \
-    ((x) == P2_SMALL || (x) == P2_MEDIUM || (x) == P2_BIG ? 2 : 0))
+    ((x) == P1_SMALL || (x) == P1_MEDIUM || (x) == P1_BIG || (x) == P1_BBIG ? 1 : \
+    ((x) == P2_SMALL || (x) == P2_MEDIUM || (x) == P2_BIG || (x) == P2_BBIG ? 2 : 0))
 
 
 #define BLACK       "\033[30m"
@@ -33,7 +33,7 @@ class Goof;
 class Game
 {
     private:
-        Case map[3][3];
+        Case map[SIZE][SIZE];
         Player player[2];
         int up;
 
@@ -57,6 +57,13 @@ class Game
         std::array<bool, 2> check_two_cases(int a, int b, int c);
         std::array<int, 2> checker_two_cases();
         int check_center();
+        int central_control(int player);
+        int aligned_piece(int player);
+        int piece_value(int player);
+        int count_threat(int player);
+        int heat_map(int player);
+        int remaining_piece(int player);
+        int detect_fork(int pturn);
         friend class Goof;
 };
 

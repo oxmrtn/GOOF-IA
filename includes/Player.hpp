@@ -19,4 +19,5 @@ class Player
         void play(int play);
         bool moov_left();
         int piece_left();
+        int score_count();
 };

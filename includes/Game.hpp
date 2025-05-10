@@ -4,6 +4,8 @@
 #include <string>
 #include <exception>
 #include <array>
+#include <random>
+#include <ctime>
 
 #include "./Case.hpp"
 #include "./Action.hpp"
@@ -43,7 +45,8 @@ class Game
         Game & operator=(const Game & other);
         ~Game();
         void launch_game_player_versus_player();
-        void launch_game_player_versus_ia(int bot_player);
+        int launch_game_player_versus_ia(int bot_player, int difficulty);
+        int launch_game_ia_versus_ia(int p1_difficulty, int p2_difficulty);
         void display_game();
         void display_raw();
         int checker();
@@ -54,9 +57,6 @@ class Game
         void PlayerPlay(int idx, int play);
         int getUp();
         void setUp(int value);
-        std::array<bool, 2> check_two_cases(int a, int b, int c);
-        std::array<int, 2> checker_two_cases();
-        int check_center();
         int central_control(int player);
         int aligned_piece(int player);
         int piece_value(int player);

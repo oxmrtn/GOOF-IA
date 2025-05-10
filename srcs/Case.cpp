@@ -2,7 +2,7 @@
 
 Case::Case()
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         tab[i] = 0;
     }
@@ -11,7 +11,7 @@ Case::Case()
 
 Case::Case(const Case & other)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         this->tab[i] = other.tab[i];
     }
@@ -22,7 +22,7 @@ Case& Case::operator=(const Case& other)
 {
     if (this != &other)
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             this->tab[i] = other.tab[i];
         }
@@ -37,14 +37,14 @@ Case::~Case()
 
 int Case::getCurrent() // Return the current states of the case
 {
-    if (latest < 0 || 4 < latest)
+    if (latest < 0 || 5 < latest)
         return (0);
     return (tab[latest]);
 }
 
 void Case::setCase(int value) // Set a new value for the case.
 {
-    if (latest >= 3)
+    if (latest > 4)
         return ;
     latest++;
     this->tab[latest] = value;
@@ -58,7 +58,7 @@ void Case::undo_move() // Withdraw a value from a case
     this->latest--;
 }
 
-bool Case::space_on_case() // True if the case is empty
+bool Case::space_on_case() // True if there is space on the case
 {
     return (this->latest >= 4 ? false : true);
 }

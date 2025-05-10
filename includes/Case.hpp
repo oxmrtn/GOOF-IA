@@ -8,7 +8,7 @@
 class Case
 {
     private:
-        int tab[4];
+        int tab[5];
         int latest;
     public:
         Case();

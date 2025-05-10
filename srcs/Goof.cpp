@@ -4,7 +4,7 @@ Goof::Goof(Game initState, int player, int difficulty)
 {
     this->currentState = initState;
     this->player = player;
-    this->depth = 3;
+    this->depth = 2;
     if (difficulty == 0)
         this->utilityFunction = &Goof::utility_easy;
     else if (difficulty == 1)
@@ -48,18 +48,16 @@ void Goof::setActionList() // Determine every possible moov for a position
                 tmp3 = tmp2 - 4;
             for (int k = 0; k < 5; k++)
             {
-           //   std::cout << "here" << std::endl
                 if (available_piece[k] != 0 && available_piece[k] > tmp3)
                 {
-                    this->listAction.push_back(Action(i, j, available_piece[k]));
-               //   std::cout << "[DEBUG] Added stored action (" << i << ", " << j << ", " << available_piece[k] << ")" << std::endl;
+                    this->listAction.push_back(Action(i, j, available_piece[k])); // Add an action to the attribute list
                 }
             }
             if ((this->player == 0 && tmp2 > 4) || (this->player == 1 && tmp2 < 5))
                 continue;
             if (tmp2 == 0)
                 continue ;
-            if ( tmp2 > 5)
+            if ( tmp2 > 4)
                 tmp2 -= 4;
             for (int p = 0; p < SIZE; p++)
             {
@@ -75,7 +73,7 @@ void Goof::setActionList() // Determine every possible moov for a position
     }
 }
 
-void Goof::fill_action_list(std::vector<Action> &vector, Game state)
+void Goof::fill_action_list(std::vector<Action> &vector, Game state) // Fill the vector with every possible moov for a state
 {
     vector.clear();
     Player a_p = state.getPlayer(state.getUp());
@@ -92,22 +90,20 @@ void Goof::fill_action_list(std::vector<Action> &vector, Game state)
             Case tmp = state.map[i][j];
             int tmp2 = tmp.getCurrent();
             int tmp3 = tmp2;
-            if ( tmp2 > 4)
-                tmp3 = tmp2 - 4;
+            if ( tmp3 > 4)
+                tmp3 -= 4;
             for (int k = 0; k < 5; k++)
             {
-           //   std::cout << "here" << std::endl
                 if (available_piece[k] != 0 && available_piece[k] > tmp3)
                 {
                     vector.push_back(Action(i, j, available_piece[k]));
-               //   std::cout << "[DEBUG] Added stored action (" << i << ", " << j << ", " << available_piece[k] << ")" << std::endl;
                 }
             }
             if ((state.getUp() == 0 && tmp2 > 4) || (state.getUp() == 1 && tmp2 < 5))
                 continue;
             if (tmp2 == 0)
                 continue ;
-            if ( tmp2 > 5)
+            if ( tmp2 > 4 )
                 tmp2 -= 4;
             for (int p = 0; p < SIZE; p++)
             {
@@ -123,7 +119,7 @@ void Goof::fill_action_list(std::vector<Action> &vector, Game state)
     }
 }
 
-Game Goof::result(Action a, const Game & state)
+Game Goof::result(Action a, const Game & state) // Return a game wich is the "state" of the game with the a Action applied to it
 {
     Game to_return = state;
     if (a.getType() == "stored")
@@ -155,55 +151,55 @@ Game Goof::result(Action a, const Game & state)
 }
 
 
-int min(int a, int b)
+int min(int a, int b) // Min func
 {
     return (a < b ? a : b);
 }
 
-int max(int a, int b)
+int max(int a, int b) // Max func
 {
     return (a > b ? a : b);
 }
 
-Action Goof::miniMax_decision_ab()
-{
-    size_t idx = 0;
-    int value = -2147483648;
-    setActionList();
-    Action to_return ;
-    while (idx < listAction.size())
+size_t get_random_index(const std::vector<Action>& vec) {
+    if (vec.empty())
     {
-        int tmp = min_value_ab(result(this->listAction[idx], this->currentState), this->depth - 1, -2147483648, 2147483647);
-        //int tmpp2 = utility2(result(this->listAction[idx], this->currentState));
-        // if (listAction[idx].getType() == "stored")
-        //     std::cout << " Action type = " << listAction[idx].getType() << " {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " piece " << listAction[idx].getMoovI(2) << " utility score = " << tmpp2 << std::endl;
-        // else
-        // {
-        //     std::cout << " Action type = " << listAction[idx].getType() << " from  {" << listAction[idx].getMoovI(0) << ";" << listAction[idx].getMoovI(1) << "}" << " move to " << " {" << listAction[idx].getMoovI(2) << ";" << listAction[idx].getMoovI(3) << "}"<< listAction[idx].getMoovI(4) <<" utility score = " << tmpp2 << std::endl;
-        // }
-        // std::cout << " tmp = " << tmp << " value = " << value << " tmp > value = " << (tmp > value) << std::endl;
-        if (tmp > value)
-        {
-            to_return = this->listAction[idx];
-            value = tmp;
-            std::cout << "hit" << std::endl;
-        }
-        idx++;
+        throw std::invalid_argument("Le vecteur est vide !");
     }
-    std::cout << "end of miniMAX, value = " << value << std::endl;
-    std::cout << "moov = {" << to_return.getMoovI(0) << ", " << to_return.getMoovI(1) << "} piece = " << to_return.getMoovI(2) << std::endl;
-    return (to_return);
+    static std::mt19937 gen(static_cast<unsigned>(std::time(nullptr)));
+    std::uniform_int_distribution<size_t> dist(0, vec.size() - 1);
+    
+    return dist(gen);
 }
 
 
-int Goof::max_value_ab(Game state, int depthh, int alpha, int beta)
+
+Action Goof::miniMax_decision_ab() // Minimax algorithm with alpha beta heuristic, it return the best Action to do in the current position
+{
+    size_t idx = 0;
+    std::vector<Action> to_return;
+    int value = -2147483648; // init value to minimum int
+    setActionList();
+    while (idx < listAction.size())
+    {
+        int tmp = min_value_ab(result(this->listAction[idx], this->currentState), this->depth - 1, -2147483648, 2147483647);
+        if (tmp > value || tmp == value)
+        {
+            to_return.push_back(this->listAction[idx]);
+            value = tmp;
+        }
+        idx++;
+    }
+    return (to_return[get_random_index(to_return)]);
+}
+
+
+int Goof::max_value_ab(Game state, int depthh, int alpha, int beta) // Maxvalue recursive algorithm used by minimax_decision
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
     if (depthh <= 0 || actionList.empty() || state.checker())
     {
-        if (state.checker())
-            state.display_game();
         return ( (this->*utilityFunction)(state) );
     }
     int v = -2147483648;
@@ -219,14 +215,12 @@ int Goof::max_value_ab(Game state, int depthh, int alpha, int beta)
     return (v);
 }
 
-int Goof::min_value_ab(Game state, int depthh, int alpha, int beta)
+int Goof::min_value_ab(Game state, int depthh, int alpha, int beta) // Minvalue recursive algorithm used by minimax_decision
 {
     std::vector<Action> actionList;
     fill_action_list(actionList, state);
     if (depthh <= 0 || actionList.empty() || state.checker())
     {
-        if (state.checker())
-            state.display_game();
         return ((this->*utilityFunction)(state) );
     }
     int v = 2147483647;

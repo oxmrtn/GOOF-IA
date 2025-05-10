@@ -249,7 +249,6 @@ int Game::check_line(int a, int b, int c, int d) // Check a line for possible al
     int p2 = 0;
     int values[4] = {a, b, c, d};
 
-    //std::cout << " a = " << a << " b = " << " c = " << c << std::endl;
     for (int i = 0; i < SIZE; i++)
     {
         if (DET_PLAYER(values[i]) == 1) // DET_PLAYER is a macro expent in Game.hpp
@@ -308,14 +307,14 @@ bool Game::execute_moov(int i, int j, int value) // Tries to place a piece in at
     }
 }
 
-Player & Game::getPlayer(int idx)
+Player & Game::getPlayer(int idx) // Return a player
 {
     if (idx != 0 && idx != 1)
         throw std::out_of_range("error: Player index out of range");
     return (player[idx]);
 }
 
-void Game::PlayerPlay(int idx, int play)
+void Game::PlayerPlay(int idx, int play) // Call a func to withdraw a piece to the Player associated object
 {
     this->player[idx].play(play);
 }
@@ -325,105 +324,17 @@ int Game::getUp()
     return this->up;
 }
 
-std::array<bool, 2> Game::check_two_cases(int a, int b, int c) // Check a line for a possible 2 pieces in a row
-{
-    int p1 = 0;
-    int p2 = 0;
-    int values[3] = {a, b, c};
-    std::array<bool, 2> tab = {false, false};
-
-    for (int i = 0; i < 3; i++)
-    {
-        if (DET_PLAYER(values[i]) == 1) // DET_PLAYER is a macro expent in Game.hpp
-            p1++;
-        if (DET_PLAYER(values[i]) == 2)
-            p2++;
-    }
-    if (p1 == 2)
-    {
-        tab[0] = true;
-    }
-    if (p2 == 2)
-    {
-        tab[1] = true;
-    }
-    return tab;
-}
-
-std::array<int, 2> Game::checker_two_cases() // Check the board for potentials 2 pieces in a row
-{   
-    std::array<int, 2> tab = {0,0};
-
-    for (int j = 0; j < 3; j++)
-    {
-        std::array<bool, 2> tmp = check_two_cases(map[0][j].getCurrent(), map[1][j].getCurrent(), map[2][j].getCurrent());
-        if (tmp[0])
-        {
-            tab[0] = 1;
-        }
-        if (tmp[1])
-        {
-            tab[1] = 1;
-        }
-    }
-    for (int i = 0; i < 3; i++)
-    {
-        std::array<bool, 2> tmp = check_two_cases(map[i][0].getCurrent(), map[i][1].getCurrent(), map[i][2].getCurrent());
-        if (tmp[0])
-        {
-            tab[0] += 1;
-        }
-        if(tmp[1])
-        {
-            tab[1] += 1;
-        }
-    }
-    {
-        std::array<bool, 2> tmp = check_two_cases(map[0][0].getCurrent(), map[1][1].getCurrent(), map[2][2].getCurrent());
-        if (tmp[0])
-        {
-            tab[0] += 1;
-        }
-        if(tmp[1])
-        {
-            tab[1] += 1;
-        }
-    }
-    {
-        std::array<bool, 2> tmp = check_two_cases(map[0][2].getCurrent(), map[1][1].getCurrent(), map[2][0].getCurrent());
-        if (tmp[0])
-        {
-            tab[0] += 1;
-        }
-        if(tmp[1])
-        {
-            tab[1] += 1;
-        }
-    }
-    return tab;
-}
-
-int Game::check_center() // Check the state of the center case, return 0 if no pieces, 1 if player 1's piece, 2 if player 2's piece
-{
-    if (DET_PLAYER(map[1][1].getCurrent()) == 1)
-        return 1;
-    if (DET_PLAYER(map[1][1].getCurrent()) == 2)
-        return 2;
-    return 0;
-}
-
-
 void Game::setUp(int value)
 {
     this->up = value;
 }
 
-void Game::display_raw()
+void Game::display_raw() // Debug func to display the raw map, without color and with the actual value of pieces
 {
     std::cout << "----------------------" << std::endl;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < SIZE; j++)
         {
             std::cout << " " << this->map[i][j].getCurrent();
         }

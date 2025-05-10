@@ -172,22 +172,26 @@ size_t get_random_index(const std::vector<Action>& vec) {
     return dist(gen);
 }
 
-
-
 Action Goof::miniMax_decision_ab() // Minimax algorithm with alpha beta heuristic, it return the best Action to do in the current position
 {
     size_t idx = 0;
     std::vector<Action> to_return;
     int value = -2147483648; // init value to minimum int
+    int alpha = -2147483648;
+    int beta = 2147483647;
     setActionList();
     while (idx < listAction.size())
     {
-        int tmp = min_value_ab(result(this->listAction[idx], this->currentState), this->depth - 1, -2147483648, 2147483647);
-        if (tmp > value || tmp == value)
+        int tmp = min_value_ab(result(this->listAction[idx], this->currentState), this->depth - 1, alpha, beta);
+        if (tmp > value)
         {
+            to_return.clear();
             to_return.push_back(this->listAction[idx]);
             value = tmp;
         }
+        else if (tmp == value)
+            to_return.push_back(this->listAction[idx]);
+        alpha = max(alpha, value);
         idx++;
     }
     return (to_return[get_random_index(to_return)]);

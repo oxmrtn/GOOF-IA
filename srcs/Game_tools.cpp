@@ -82,13 +82,13 @@ int Game::piece_value( int player ) // Check the value of the piece on the board
             if (DET_PLAYER(tmp) == player + 1)
             {
                 if (tmp == P1_SMALL || tmp == P2_SMALL)
-                    score += 1;
-                else if (tmp == P1_MEDIUM || tmp == P2_MEDIUM)
-                    score += 2;
-                else if (tmp == P1_BIG || tmp == P2_BIG)
                     score += 3;
-                else if (tmp == P1_BBIG || tmp == P2_BBIG)
+                else if (tmp == P1_MEDIUM || tmp == P2_MEDIUM)
+                    score += 3;
+                else if (tmp == P1_BIG || tmp == P2_BIG)
                     score += 4;
+                else if (tmp == P1_BBIG || tmp == P2_BBIG)
+                    score += 5;
             }
         }
     }

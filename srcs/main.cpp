@@ -120,6 +120,13 @@ void menu()
     {
         std::cout << RED << "Your choice : " << DEFAULT;
         std::cin >> gm_choice;
+        if (std::cin.fail())
+        {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
     }
     Game game;
     switch (gm_choice)
@@ -150,7 +157,7 @@ void menu()
             std::cout << "\nDifficulty for Goofybot Player 2:" << std::endl;
             display_difficulty_menu(p2_difficulty);
 
-            game.launch_game_ia_versus_ia(p1_difficulty, p2_difficulty);
+            game.launch_game_ia_versus_ia(p1_difficulty - 1, p2_difficulty - 1);
             break;
         }
         default:
@@ -171,7 +178,6 @@ int main(int argc, char **argv)
             return (1);
         }
         menu();
-        tournament();
     }
     catch (std::exception &e)
     {

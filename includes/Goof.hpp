@@ -19,7 +19,7 @@ class Goof
         std::vector<Action> listAction;
         int depth;
         int player;
-        int (Goof::*utilityFunction)(Game state);
+        int (Goof::*utilityFunction)(Game state, size_t nb_moov);
     
     public:
         Goof(Game initState, int player, int difficulty);
@@ -31,7 +31,7 @@ class Goof
         int min_value_ab(Game state, int depthh, int alpha, int beta);
         int max_value_ab(Game state, int depthh, int alpha, int beta);
         Game result(Action a, const Game & state);
-        int utility_easy(Game state);
-        int utility_medium(Game state);
-        int utility_hard(Game state);
+        int utility_easy(Game state, size_t nbr_moov);
+        int utility_medium(Game state, size_t nbr_moov);
+        int utility_hard(Game state, size_t nbr_moov);
 };

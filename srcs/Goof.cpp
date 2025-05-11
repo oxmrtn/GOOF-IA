@@ -10,10 +10,7 @@ Goof::Goof(Game initState, int player, int difficulty)
     else if (difficulty == 1)
         this->utilityFunction = &Goof::utility_medium;
     else if (difficulty == 2)
-    {
         this->utilityFunction = &Goof::utility_hard;
-        this->depth = 3;
-    }
     else
         this->utilityFunction = &Goof::utility_easy;
 
@@ -175,7 +172,7 @@ size_t get_random_index(const std::vector<Action>& vec) {
 Action Goof::miniMax_decision_ab() // Minimax algorithm with alpha beta heuristic, it return the best Action to do in the current position
 {
     size_t idx = 0;
-    std::vector<Action> to_return;
+    std::vector<Action> to_return; // The vector permit to have random moov amongst the best ones
     int value = -2147483648; // init value to minimum int
     int alpha = -2147483648;
     int beta = 2147483647;
@@ -204,7 +201,7 @@ int Goof::max_value_ab(Game state, int depthh, int alpha, int beta) // Maxvalue 
     fill_action_list(actionList, state);
     if (depthh <= 0 || actionList.empty() || state.checker())
     {
-        return ( (this->*utilityFunction)(state) );
+        return ( (this->*utilityFunction)(state, actionList.size()) );
     }
     int v = -2147483648;
     size_t idx = 0;
@@ -225,7 +222,7 @@ int Goof::min_value_ab(Game state, int depthh, int alpha, int beta) // Minvalue 
     fill_action_list(actionList, state);
     if (depthh <= 0 || actionList.empty() || state.checker())
     {
-        return ((this->*utilityFunction)(state) );
+        return ((this->*utilityFunction)(state, actionList.size()) );
     }
     int v = 2147483647;
     size_t idx = 0;

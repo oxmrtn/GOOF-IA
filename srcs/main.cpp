@@ -98,6 +98,67 @@ void tournament()
     }
 }
 
+void display_difficulty_menu(int& difficulty)
+{
+    std::cout << "\nChoose difficulty level:" << std::endl;
+    std::cout << "1. Easy\n2. Medium\n3. Hard" << std::endl;
+    while (difficulty < 1 || difficulty > 3)
+    {
+        std::cout << "Your choice (1-3): ";
+        std::cin >> difficulty;
+    }
+}
+
+void menu()
+{
+    int gm_choice = 0;
+    std::cout << BLUE << "Welcome to  Goofy Gobblets game ! Please choose a game mode :" << DEFAULT << std::endl;
+    std::cout << "1. Player versus Player " << std::endl;
+    std::cout << "2. Player versus Goofybot " << std::endl;
+    std::cout << "3. Goofybot versus Goofybot " << std::endl;
+    while (gm_choice != 1 && gm_choice != 2 && gm_choice != 3)
+    {
+        std::cout << RED << "Your choice : " << DEFAULT;
+        std::cin >> gm_choice;
+    }
+    Game game;
+    switch (gm_choice)
+    {
+        case 1:
+        game.launch_game_player_versus_player();
+        break;
+        case 2:
+        {
+            int bot_player = 0;
+            while (bot_player != 1 && bot_player != 2)
+            {
+                std::cout << "\nShould the bot be:\n1. Player 1\n2. Player 2\nYour choice: ";
+                std::cin >> bot_player;
+            }
+
+            int difficulty = 0;
+            display_difficulty_menu(difficulty);
+            game.launch_game_player_versus_ia(bot_player - 1, difficulty - 1);
+            break;
+        }
+        case 3:
+        {
+            int p1_difficulty = 0, p2_difficulty = 0;
+            std::cout << "\nDifficulty for Goofybot Player 1:" << std::endl;
+            display_difficulty_menu(p1_difficulty);
+
+            std::cout << "\nDifficulty for Goofybot Player 2:" << std::endl;
+            display_difficulty_menu(p2_difficulty);
+
+            game.launch_game_ia_versus_ia(p1_difficulty, p2_difficulty);
+            break;
+        }
+        default:
+            break;
+    }
+    return ;
+
+}
 
 
 int main(int argc, char **argv)
@@ -109,8 +170,8 @@ int main(int argc, char **argv)
             std::cerr << "error: No argument is required !";
             return (1);
         }
-        Game init = Game();
-        init.launch_game_player_versus_ia(1, 2);
+        menu();
+        tournament();
     }
     catch (std::exception &e)
     {

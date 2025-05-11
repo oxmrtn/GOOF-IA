@@ -177,8 +177,8 @@ int Game::launch_game_ia_versus_ia(int p1_difficulty, int p2_difficulty)
             }
             else
             {
-                std::cout << MAGENTA << "Player 2 mooved a " << temp - 4 << " piece from {" << action.getMoovI(0) << ";" << action.getMoovI(1) << "} case to {" << action.getMoovI(2) << ";" << action.getMoovI(3) << "} case !" << DEFAULT <<std::endl;
                 int temp = map[action.getMoovI(0)][action.getMoovI(1)].getCurrent();
+                std::cout << MAGENTA << "Player 2 mooved a " << temp - 4 << " piece from {" << action.getMoovI(0) << ";" << action.getMoovI(1) << "} case to {" << action.getMoovI(2) << ";" << action.getMoovI(3) << "} case !" << DEFAULT <<std::endl;
                 this->map[action.getMoovI(0)][action.getMoovI(1)].undo_move();
                 if (checker())
                 {

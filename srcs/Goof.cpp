@@ -4,7 +4,7 @@ Goof::Goof(Game initState, int player, int difficulty)
 {
     this->currentState = initState;
     this->player = player;
-    this->depth = 2;
+    this->depth = DEPTH;
     if (difficulty == 0)
         this->utilityFunction = &Goof::utility_easy;
     else if (difficulty == 1)

@@ -7,6 +7,8 @@
 #include <array>
 #include <unistd.h>
 
+#define DEPTH 2
+
 
 #include "./Game.hpp"
 #include "./Action.hpp"
